@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.internship.demo.dao">
+
+	<resultMap id="UserResultMap" type="com.internship.demo.domain.Users">
+        <id property="id" column="id"/>
+        <result property="username" column="user_name"/>
+        <result property="password" column="password"/>
+    </resultMap>
+    
+    <select id="findUser" resultMap="UserResultMap" parameterType="String">
+        SELECT
+            *
+        FROM users u
+        WHERE u.user_name = #{username}
+    </select>
+</mapper>
