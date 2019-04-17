@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.internship.demo.dao">
+<mapper namespace="com.internship.demo.repository.UserRepository">
 
 	<resultMap id="UserResultMap" type="com.internship.demo.domain.Users">
         <id property="id" column="id"/>
@@ -8,10 +8,22 @@
         <result property="password" column="password"/>
     </resultMap>
     
-    <select id="findUser" resultMap="UserResultMap" parameterType="String">
+    <select id="findAllUser" resultMap="UserResultMap">
         SELECT
             *
         FROM users u
+    </select>
+    
+    <select id="findUserByUsername" parameterType="String" resultMap="UserModel">
+        SELECT
+            *
+        FROM users u join role r on u.role = r.role_id
         WHERE u.user_name = #{username}
     </select>
+    <resultMap id="UserModel" type="com.internship.demo.model.UserModel">
+        <id property="id" column="id"/>
+        <result property="username" column="user_name"/>
+        <result property="password" column="password"/>
+        <result property="roleName" column="role_name"/>
+    </resultMap>
 </mapper>
