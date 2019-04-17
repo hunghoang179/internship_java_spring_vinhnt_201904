@@ -28,4 +28,14 @@ public class UsersServiceImpl implements UsersDao {
 		return userModel;
 	}
 
+	@Override
+	public int insertUser(Users users) {
+		Users user = userRepository.findUserByUsernameOrMail(users.getUsername(), users.getMail());
+		if(user != null) {
+			return 0;
+		}
+		userRepository.insertUser(users);
+		return 1;
+	}
+
 }

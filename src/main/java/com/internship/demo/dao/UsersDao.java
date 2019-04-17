@@ -10,5 +10,5 @@ public interface UsersDao {
 	
 	List<Users> findAllUser();
 	UserModel findUserByUsername(String username);
-
+	int insertUser(Users users);
 }

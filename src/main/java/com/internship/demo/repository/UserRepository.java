@@ -11,4 +11,6 @@ import com.internship.demo.model.UserModel;
 public interface UserRepository {
 	List<Users> findAllUser();
 	UserModel findUserByUsername(String username);
+	int insertUser(Users users);
+	Users findUserByUsernameOrMail(String username, String mail);
 }

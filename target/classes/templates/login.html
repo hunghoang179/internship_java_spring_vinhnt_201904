@@ -8,14 +8,16 @@
 </head>
 <body>
 	<div class="login-page">
+	<p th:if="${param.error}" class="error">Tài khoản hoặc mật khẩu không đúng</p>
 		<p th:if="${errorLogin != null}" th:text="${errorLogin}"></p>
+		<p th:if="${errorMessage != null}" th:text="${errorMessage}"></p>
 		<div class="form">
-			<form method="POST" th:action="@{/register}" class="register-form">
+			<form method="POST" th:action="@{/user/register}" class="register-form">
 				<input type="text" name="username" placeholder="name" required="required"/> 
 				<input type="password" name="password" placeholder="password" required="required"/> 
-				<input type="text" name="mail" placeholder="email address" required="required"/>
+				<input type="email" name="mail" placeholder="email address" required="required"/>
 				<input type="text" name="address" placeholder="address" required="required"/>
-				<input type="text" name="phone" placeholder="phone" required="required"/>
+				<input type="number" name="phone" placeholder="phone" required="required"/>
 				<button>create</button>
 				<p class="message">
 					Already registered? <a href="#">Sign In</a>

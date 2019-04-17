@@ -95,6 +95,12 @@ public class UserModel {
 	public void setRoleName(String roleName) {
 		this.roleName = roleName;
 	}
-	
+	@Override
+	public String toString() {
+		return "UserModel [id=" + id + ", username=" + username + ", password=" + password + ", mail=" + mail
+				+ ", address=" + address + ", phone=" + phone + ", role=" + role + ", createUser=" + createUser
+				+ ", updateUser=" + updateUser + ", createTime=" + createTime + ", updateTime=" + updateTime
+				+ ", status=" + status + ", roleName=" + roleName + "]";
+	}
 	
 }
