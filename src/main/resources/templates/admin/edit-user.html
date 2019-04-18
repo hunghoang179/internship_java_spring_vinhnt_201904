@@ -44,45 +44,43 @@ footer {
 	<div class="container">
 		<div class="row">
 			<div class="col-lg-12">
-				<h3 class="text-center">Cập nhật thông tin</h3>
+				<h3 class="text-center">Thay đổi thông tin người dùng</h3>
 			</div>
 			<div class="col-lg-3"></div>
 			<div class="col-lg-6">
-				<form class="form-horizontal" id="updateUser">
-					<input type="hidden" id="dataUser" th:value="${users.getId()}">
-					<div class="form-group">
-						<label class="error" id="messageError"></label>
-					</div>
+				<form class="form-horizontal" id="editUser" method="post" th:action="@{/admin/thay-doi-thong-tin}">
+				<input type="hidden" name="id" th:value="${userById.getId()}">
 					<div class="form-group">
 						<label class="control-label col-sm-3" for="email">Tài
 							khoản:</label>
 
 						<div class="col-sm-9">
 							<input type="text" class="form-control" name="username"
-								id="username" th:value="${users.getUsername()}" readonly="readonly"
-								placeholder="Tài khoản">
+								id="username" th:value="${userById.getUsername()}"
+								readonly="readonly" placeholder="Tài khoản">
 						</div>
 					</div>
 					<div class="form-group">
 						<label class="control-label col-sm-3" for="email">Mật
 							khẩu:</label>
 						<div class="col-sm-9">
-							<input type="password" class="form-control" name="password"
+							<input type="password" class="form-control" name="password" th:value="${userById.getPassword()}"
 								id="password" placeholder="Mật khẩu">
 						</div>
 					</div>
 					<div class="form-group">
 						<label class="control-label col-sm-3" for="pwd">Mail:</label>
 						<div class="col-sm-9">
-							<input type="email" class="form-control" name="mail" id="mail"
-								th:value="${users.getMail()}" placeholder="Mail">
+							<input type="text" class="form-control" name="mail" id="mail"
+								readonly="readonly" th:value="${userById.getMail()}"
+								placeholder="Mail">
 						</div>
 					</div>
 					<div class="form-group">
 						<label class="control-label col-sm-3" for="pwd">Địa chỉ:</label>
 						<div class="col-sm-9">
 							<input type="text" class="form-control" name="address"
-								id="address" th:value="${users.getAddress()}"
+								id="address" th:value="${userById.getAddress()}"
 								placeholder="Địa chỉ">
 						</div>
 					</div>
@@ -91,7 +89,29 @@ footer {
 							thoại:</label>
 						<div class="col-sm-9">
 							<input type="text" class="form-control" name="phone" id="phone"
-								th:value="${users.getPhone()}" placeholder="Điện thoại">
+								th:value="${userById.getPhone()}" placeholder="Điện thoại">
+						</div>
+					</div>
+					<div class="form-group" th:if="${not #lists.isEmpty(listRole)}">
+						<label class="control-label col-sm-3" for="pwd">Quyền</label>
+						<div class="col-sm-9">
+							<select name="role" id="role" class="form-control fill">
+								<th:block th:each="role : ${listRole}">
+									<option
+										th:selected="${role.getId() == userById.getRole()}"
+										th:value="${role.getId()}"
+										th:text="${role.getRoleName()}"></option>
+								</th:block>
+							</select>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="control-label col-sm-3" for="pwd">Trạng thái</label>
+						<div class="col-sm-9">
+							<select name="status" id="status" class="form-control fill">
+								<option th:selected="${userById.getStatus() == 0}" value="0">Hoạt động</option>
+								<option th:selected="${userById.getStatus() == 1}" value="1">Dừng hoạt động</option>
+							</select>
 						</div>
 					</div>
 					<div class="form-group">
@@ -99,7 +119,8 @@ footer {
 							<button type="submit" class="btn btn-default">Cập nhật</button>
 						</div>
 						<div class="col-sm-3">
-							<a th:href=@{/home}><button type="button" class="btn btn-default">Hủy</button></a>
+							<a th:href=@{/admin/nguoi-dung}><button type="button"
+									class="btn btn-default">Hủy</button></a>
 						</div>
 					</div>
 				</form>
@@ -111,66 +132,23 @@ footer {
 	<div th:replace="layout :: footer"></div>
 
 	<script>
-		$("#updateUser").validate(
+		$("#editUser").validate(
 				{
 					rules : {
-						username : "required",
 						password : "required",
 						address : "required",
 						phone : {
 							required : true,
 							number : true
-						},
-						mail : {
-							required : true,
-							email : true
 						}
 					},
 					messages : {
-						username : "Tài khoản không được để trống",
 						password : "Mật khẩu không được để trống",
 						address : "Địa chỉ không được để trống",
 						phone : {
 							required : "Điện thoại không được để trống",
 							number : "Số điện thoại không đúng"
-						},
-						mail : {
-							required : "Mail không được để trống",
-							email : "Mail không đúng định dạng"
 						}
-					},
-					submitHandler : function(form) {
-						var id = $("#dataUser").val();
-						var username = $("#username").val();
-						var phone = $("#phone").val();
-						var address = $("#address").val();
-						var password = $("#password").val();
-						var mail = $("#mail").val();
-						$.ajax({
-							type : 'GET',
-							url : "/ajax/kiem-tra-user",
-							data : {
-								id : id,
-								username : username,
-								mail : mail,
-								phone : phone,
-								address : address,
-								password : password
-
-							},
-							success : function(result) {
-
-								if (result == "ok") {
-									window.location.href = "http://localhost:8080/home";
-								}
-
-								if (result == "false") {
-									$("#messageError").text(
-											"Tài khoản hoặc mail đã tồn tại");
-									$("#messageError").show();
-								}
-							}
-						});
 					}
 				});
 	</script>

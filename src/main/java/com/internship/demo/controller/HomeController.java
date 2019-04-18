@@ -34,8 +34,11 @@ public class HomeController {
 
 	@GetMapping("/home")
 	public String index(Model model, Principal principal) {
-		log.info("OK home - " + principal.getName());
-		model.addAttribute("user", principal.getName());
+		UserModel users = usersDao.findUserByUsername(principal.getName());
+		if (users == null) {
+			return "redirect: /403";
+		}
+		model.addAttribute("user", users);
 		return "home";
 	}
 
@@ -49,6 +52,11 @@ public class HomeController {
 	public String getLogin() {
 		return "login";
 	}
+	
+	@GetMapping(path = "/register")
+	public String redirectRigisterPage() {
+		return "register";
+	}
 
 	@GetMapping("/logout")
 	public String logout(HttpServletRequest request, HttpServletResponse response) {
@@ -60,17 +68,13 @@ public class HomeController {
 	}
 
 	@GetMapping("/cap-nhat-thong-tin")
-	public String rediectUpdateUserPage(@SessionAttribute String user, Model model) {
-		UserModel users = usersDao.findUserByUsername(user);
-		if (users == null) {
-			return "redirect: /403";
-		}
-		model.addAttribute("users", users);
+	public String rediectUpdateUserPage(@SessionAttribute UserModel user, Model model) {
+		model.addAttribute("users", user);
 		return "/users/updateUser";
 	}
-	
+
 	@PostMapping("/cap-nhat-thong-tin")
 	public String updateUser(Model model) {
-		return "/users/updateUser";
+		return "redirect:/home";
 	}
 }

@@ -8,39 +8,18 @@
 </head>
 <body>
 	<div class="login-page">
-	<p th:if="${param.error}" class="error">Tài khoản hoặc mật khẩu không đúng</p>
-		<p th:if="${errorLogin != null}" th:text="${errorLogin}"></p>
-		<p th:if="${errorMessage != null}" th:text="${errorMessage}"></p>
 		<div class="form">
-			<form method="POST" th:action="@{/user/register}" class="register-form">
-				<input type="text" name="username" placeholder="name" required="required"/> 
-				<input type="password" name="password" placeholder="password" required="required"/> 
-				<input type="email" name="mail" placeholder="email address" required="required"/>
-				<input type="text" name="address" placeholder="address" required="required"/>
-				<input type="number" name="phone" placeholder="phone" required="required"/>
-				<button>create</button>
-				<p class="message">
-					Already registered? <a href="#">Sign In</a>
-				</p>
-			</form>
 			<form method="POST" th:action="@{/login}" class="login-form">
 				<input type="text" name="username" placeholder="username" required="required"/> 
 				<input type="password" name="password" placeholder="password" required="required"/>
+				<p th:if="${param.error}" class="error">Tài khoản hoặc mật khẩu không đúng</p>
 				<button>Login</button>
 				<p class="message">
-					Not registered? <a href="#">Create an account</a>
+					Not registered? <a th:href="@{/register}">Create an account</a>
 				</p>
 			</form>
 		</div>
 	</div>
 	<script type="text/javascript" th:src="@{/js/jquery-3.4.0.min.js}"></script>
-	<script>
-		$('.message a').click(function() {
-			$('form').animate({
-				height : "toggle",
-				opacity : "toggle"
-			}, "slow");
-		});
-	</script>
 </body>
 </html>

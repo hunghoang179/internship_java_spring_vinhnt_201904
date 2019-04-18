@@ -30,45 +30,7 @@ footer {
 </style>
 </head>
 <body>
-
-	<!-- <div class="jumbotron">
-  <div class="container text-center">
-    <h1>Online Store</h1>      
-    <p>Mission, Vission & Values</p>
-  </div>
-</div>
- -->
-	<nav class="navbar navbar-inverse">
-		<div class="container-fluid">
-			<div class="navbar-header">
-				<button type="button" class="navbar-toggle" data-toggle="collapse"
-					data-target="#myNavbar">
-					<span class="icon-bar"></span> <span class="icon-bar"></span> <span
-						class="icon-bar"></span>
-				</button>
-				<a class="navbar-brand" href="#">Logo</a>
-			</div>
-			<div class="collapse navbar-collapse" id="myNavbar">
-				<ul class="nav navbar-nav">
-					<li class="active"><a href="#">Trang chủ</a></li>
-					<li><a href="#">Người dùng</a></li>
-					<li><a href="#">Thể loại sách</a></li>
-					<li><a href="#">Mượn sách</a></li>
-					<li><a href="#">Contact</a></li>
-				</ul>
-				<ul class="nav navbar-nav navbar-right">
-					<li class="dropdown"><a class="dropdown-toggle"
-						data-toggle="dropdown" href="#"><span th:if="${user != null}"
-							th:text="${'Xin chào, ' + user}"></span><span class="caret"></span></a>
-						<ul class="dropdown-menu">
-							<li><a th:href="@{/cap-nhat-thong-tin}">Thay đổi thông
-									tin</a></li>
-							<li><a th:href="@{/logout}">Đăng xuất</a></li>
-						</ul></li>
-				</ul>
-			</div>
-		</div>
-	</nav>
+	<div th:replace="layout :: header"></div>
 
 	<div class="container">
 		<div class="row">
@@ -143,14 +105,7 @@ footer {
 	<br>
 	<br>
 
-	<footer class="container-fluid text-center">
-		<p>Online Store Copyright</p>
-		<form class="form-inline">
-			Get deals: <input type="email" class="form-control" size="50"
-				placeholder="Email Address">
-			<button type="button" class="btn btn-danger">Sign Up</button>
-		</form>
-	</footer>
+	<div th:replace="layout :: footer"></div>
 
 </body>
 </html>

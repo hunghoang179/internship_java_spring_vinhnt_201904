@@ -19,19 +19,37 @@
 				<div class="collapse navbar-collapse" id="myNavbar">
 					<ul class="nav navbar-nav">
 						<li class="active"><a href="#">Trang chủ</a></li>
-						<li><a href="#">Người dùng</a></li>
+						<li th:if="${user.getRole() != 0}"><a th:href="@{/admin/nguoi-dung}">Người dùng</a></li>
 						<li><a href="#">Thể loại sách</a></li>
 						<li><a href="#">Mượn sách</a></li>
 						<li><a href="#">Contact</a></li>
 					</ul>
 					<ul class="nav navbar-nav navbar-right">
-						<li><a href="#"><span class="glyphicon glyphicon-user"></span>Xin
-								chào</a></li>
+						<li class="dropdown"><a class="dropdown-toggle"
+							data-toggle="dropdown" href="#"><span th:if="${user != null}"
+								th:text="${'Xin chào, ' + user.getUsername()}"></span><span
+								class="caret"></span></a>
+							<ul class="dropdown-menu">
+								<li><a th:href="@{/cap-nhat-thong-tin}">Thay đổi thông
+										tin</a></li>
+								<li><a th:href="@{/logout}">Đăng xuất</a></li>
+							</ul></li>
 					</ul>
 				</div>
 			</div>
 		</nav>
+	</div>
 
+	<div th:fragment="footer">
+		<!-- <footer class="container-fluid text-center">
+			<p>Online Store Copyright</p>
+			<form class="form-inline">
+				Get deals: <input type="email" class="form-control" size="50"
+					placeholder="Email Address">
+				<button type="button" class="btn btn-danger">Sign Up</button>
+			</form>
+		</footer> -->
+		<div></div>
 	</div>
 </body>
 </html>
