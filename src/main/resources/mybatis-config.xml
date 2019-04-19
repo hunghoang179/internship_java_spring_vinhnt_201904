@@ -15,6 +15,8 @@
         <typeAlias alias="LinkedList" type="java.util.LinkedList" />
         <typeAlias alias="Users" type="com.internship.demo.domain.Users" />
         <typeAlias alias="Role" type="com.internship.demo.domain.Role" />
+        <typeAlias alias="Book" type="com.internship.demo.domain.Book" />
+        <typeAlias alias="Category" type="com.internship.demo.domain.Category" />
     </typeAliases>
     <environments default="development">
     <environment id="development">
@@ -30,5 +32,7 @@
   <mappers>
     <mapper resource="mybatis/mapper/UsersMapper.xml"/>
     <mapper resource="mybatis/mapper/RoleMapper.xml"/>
+    <mapper resource="mybatis/mapper/BookMapper.xml"/>
+    <mapper resource="mybatis/mapper/CategoryMapper.xml"/>
   </mappers>
 </configuration>

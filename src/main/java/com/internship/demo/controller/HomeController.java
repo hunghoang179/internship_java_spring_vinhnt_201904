@@ -1,6 +1,7 @@
 package com.internship.demo.controller;
 
 import java.security.Principal;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -19,7 +20,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
+import com.internship.demo.dao.BookDao;
+import com.internship.demo.dao.CategoryDao;
 import com.internship.demo.dao.UsersDao;
+import com.internship.demo.domain.Book;
+import com.internship.demo.domain.Category;
 import com.internship.demo.model.UserModel;
 
 @Controller
@@ -32,6 +37,12 @@ public class HomeController {
 	@Autowired
 	UsersDao usersDao;
 
+	@Autowired
+	BookDao bookDao;
+
+	@Autowired
+	CategoryDao categoryDao;
+
 	@GetMapping("/home")
 	public String index(Model model, Principal principal) {
 		UserModel users = usersDao.findUserByUsername(principal.getName());
@@ -39,6 +50,10 @@ public class HomeController {
 			return "redirect: /403";
 		}
 		model.addAttribute("user", users);
+		List<Book> listBook = bookDao.getListBook();
+		List<Category> listCategory = categoryDao.getListCategory();
+		model.addAttribute("listBook", listBook);
+		model.addAttribute("listCategory", listCategory);
 		return "home";
 	}
 
@@ -52,7 +67,7 @@ public class HomeController {
 	public String getLogin() {
 		return "login";
 	}
-	
+
 	@GetMapping(path = "/register")
 	public String redirectRigisterPage() {
 		return "register";

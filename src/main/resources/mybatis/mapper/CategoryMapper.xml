@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="com.internship.demo.model.mapper.CategoryModelMapper">
+	
+	
+	<resultMap id="CategoryResultMap" type="Category">
+		<result property="idParent" column="id_parent" />
+		<result property="createUser" column="create_user" />
+		<result property="updateUser" column="update_user" />
+		<result property="createTime" column="create_time" />
+		<result property="updateTime" column="update_time" />
+		<result property="status" column="id_deleted" />
+	</resultMap>
+	
+	<select id="getListCategory" resultMap="CategoryResultMap">
+		SELECT
+			*
+		FROM categories
+	</select>
+</mapper>
