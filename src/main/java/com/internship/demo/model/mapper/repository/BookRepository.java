@@ -15,29 +15,34 @@ public class BookRepository extends Repository<BookModelMapper> {
 	protected BookModelMapper repositoryMapper(SqlSession session) {
 		return session.getMapper(BookModelMapper.class);
 	}
-	
+
 	public List<Book> getListBook() {
 		return execute(mapper -> {
 			return mapper.getListBook();
 		});
 	}
-	
+
 	public Book findBookById(long id) {
 		return execute(mapper -> {
 			return mapper.findBookById(id);
 		});
 	}
-	
+
 	public void updateBook(Book book) {
 		execute(mapper -> {
 			mapper.updateBook(book);
 		});
 	}
-	
+
 	public void insertBook(Book book) {
 		execute(mapper -> {
 			mapper.insertBook(book);
 		});
 	}
 
+	public void updateOutStockBook(Book book) {
+		execute(mapper -> {
+			mapper.updateOutStockBook(book);
+		});
+	}
 }

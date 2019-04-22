@@ -9,4 +9,5 @@ public interface BookModelMapper {
 	Book findBookById(long id);
 	void updateBook(Book book);
 	void insertBook(Book book);
+	void updateOutStockBook(Book book);
 }

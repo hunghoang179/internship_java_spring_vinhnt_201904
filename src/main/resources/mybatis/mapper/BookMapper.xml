@@ -44,4 +44,11 @@
 		b.update_time = #{updateTime}
 		WHERE b.id = #{id};
 	</update>
+
+	<update id='updateOutStockBook' parameterType='Book'>
+		UPDATE books b
+		SET
+		b.out_stock = #{outStock}
+		WHERE b.id = #{id};
+	</update>
 </mapper>

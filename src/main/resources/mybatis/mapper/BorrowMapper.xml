@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="com.internship.demo.model.mapper.BorrowOrderModelMapper">
+
+	<resultMap id="BorrowOrderResultMap" type="BorrowOrder">
+		<result property="idUser" column="id_user" />
+		<result property="idBook" column="id_book" />
+		<result property="borrowDate" column="borrow_date" />
+		<result property="returnDate" column="return_date" />
+		<result property="createUser" column="create_user" />
+		<result property="updateUser" column="update_user" />
+		<result property="createTime" column="create_time" />
+		<result property="updateTime" column="update_time" />
+		<result property="isDeleted" column="id_deleted" />
+	</resultMap>
+
+	<resultMap id="BorrowBookResultMap" type="BorrowBookDto">
+		<result property="idUser" column="id_user" />
+		<result property="idBook" column="id_book" />
+		<result property="borrowDate" column="borrow_date" />
+		<result property="returnDate" column="return_date" />
+		<result property="outStock" column="out_stock" />
+	</resultMap>
+
+	<select id="getListBorrowOrder" resultMap="BorrowBookResultMap">
+		SELECT
+		bo.id_user,
+		bo.id_book, bo.borrow_date, bo.return_date, bo.note, bo.status,
+		b.title, b.stock, b.out_stock
+		FROM borrow_orders bo
+		JOIN books b
+		ON bo.id_book = b.id
+	</select>
+	
+	<select id="getListBorrowOrderByUser" parameterType="Long" resultMap="BorrowBookResultMap">
+		SELECT
+		bo.id_user,
+		bo.id_book, bo.borrow_date, bo.return_date, bo.note, bo.status,
+		b.title, b.stock, b.out_stock
+		FROM borrow_orders bo
+		JOIN books b
+		ON bo.id_book = b.id
+		WHERE bo.id_user = #{id}
+	</select>
+
+	<!-- <select id="findBookById" parameterType="Long" resultMap="BookResultMap"> 
+		SELECT * FROM books b WHERE b.id = #{id} </select> -->
+
+	<insert id='insertBorrowOrder' parameterType='BorrowOrder'>
+		INSERT INTO
+		borrow_orders(id_user, id_book, borrow_date, return_date, note,
+		status,
+		create_user, create_time, update_user, update_time)
+		VALUES(#{idUser},#{idBook},#{borrowDate},#{returnDate},#{note},#{status},#{createUser},#{createTime},#{updateUser},#{updateTime})
+	</insert>
+
+	<!-- <update id='updateBook' parameterType='Book'> UPDATE books b SET b.title 
+		= #{title}, b.content_short = #{contentShort}, b.stock = #{stock}, b.author 
+		= #{author}, b.year = #{year}, b.update_user = #{updateUser}, b.update_time 
+		= #{updateTime} WHERE b.id = #{id}; </update> -->
+</mapper>

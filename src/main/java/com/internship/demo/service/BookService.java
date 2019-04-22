@@ -34,5 +34,10 @@ public class BookService implements BookDao {
 	public void insertBook(Book book) {
 		bookRepository.insertBook(book);
 	}
+	
+	@Override
+	public void updateOutStockBook(Book book) {
+		bookRepository.updateOutStockBook(book);
+	}
 
 }

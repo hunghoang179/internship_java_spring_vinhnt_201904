@@ -17,6 +17,8 @@
         <typeAlias alias="Role" type="com.internship.demo.domain.Role" />
         <typeAlias alias="Book" type="com.internship.demo.domain.Book" />
         <typeAlias alias="Category" type="com.internship.demo.domain.Category" />
+        <typeAlias alias="BorrowOrder" type="com.internship.demo.domain.BorrowOrder" />
+        <typeAlias alias="BorrowBookDto" type="com.internship.demo.model.BorrowBookDto" />
     </typeAliases>
     <environments default="development">
     <environment id="development">
@@ -34,5 +36,6 @@
     <mapper resource="mybatis/mapper/RoleMapper.xml"/>
     <mapper resource="mybatis/mapper/BookMapper.xml"/>
     <mapper resource="mybatis/mapper/CategoryMapper.xml"/>
+    <mapper resource="mybatis/mapper/BorrowMapper.xml"/>
   </mappers>
 </configuration>

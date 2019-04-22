@@ -8,8 +8,8 @@ public class Book {
 	private String idCategory;
 	private String title;
 	private String contentShort;
-	private String stock;
-	private String outStock;
+	private Integer stock;
+	private Integer outStock;
 	private String author;
 	private String year;
 	private String createUser;
@@ -50,19 +50,19 @@ public class Book {
 		this.contentShort = contentShort;
 	}
 
-	public String getStock() {
+	public Integer getStock() {
 		return stock;
 	}
 
-	public void setStock(String stock) {
+	public void setStock(Integer stock) {
 		this.stock = stock;
 	}
 
-	public String getOutStock() {
+	public Integer getOutStock() {
 		return outStock;
 	}
 
-	public void setOutStock(String outStock) {
+	public void setOutStock(Integer outStock) {
 		this.outStock = outStock;
 	}
 

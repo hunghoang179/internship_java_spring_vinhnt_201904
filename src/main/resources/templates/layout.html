@@ -19,9 +19,11 @@
 				<div class="collapse navbar-collapse" id="myNavbar">
 					<ul class="nav navbar-nav">
 						<li class="active"><a th:href="@{/home}">Trang chủ</a></li>
-						<li th:if="${user.getRole() != 0}"><a th:href="@{/admin/nguoi-dung}">Người dùng</a></li>
-						<li><a href="#">Thể loại sách</a></li>
-						<li><a href="#">Mượn sách</a></li>
+						<th:block th:if="${user.getRole() != 0}">
+							<li><a th:href="@{/admin/nguoi-dung}">Người dùng</a></li>
+							<li><a th:href="@{/book/the-loai-sach}">Thể loại sách</a></li>
+						</th:block>
+						<li><a th:href="@{/book/danh-sach-muon-sach}">Mượn sách</a></li>
 						<li><a href="#">Contact</a></li>
 					</ul>
 					<ul class="nav navbar-nav navbar-right">
