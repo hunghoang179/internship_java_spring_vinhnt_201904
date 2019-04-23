@@ -17,13 +17,12 @@
 				<input type="password" name="password" placeholder="password"
 					required="required" /> <input type="email" name="mail"
 					placeholder="email address" required="required" />
-				<p class="error" th:if="${errorMail != null}"
-					th:text="${errorMessage}"></p>
+				<p class="error" th:if="${errorMail != null}" th:text="${errorMail}"></p>
 				<input type="text" name="address" placeholder="address"
 					required="required" /> <input type="number" name="phone"
 					placeholder="phone" required="required" />
 				<p class="error" th:if="${errorPhone != null}"
-					th:text="${errorMessage}"></p>
+					th:text="${errorPhone}"></p>
 				<button>create</button>
 				<p class="message">
 					Already registered? <a th:href="@{/login}">Sign In</a>

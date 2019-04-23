@@ -1,5 +1,7 @@
 package com.internship.demo.controller;
 
+import java.text.ParseException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,20 +25,26 @@ public class UserController {
 	UsersDao usersDao;
 
 	@PostMapping(path = "/register")
-	public String insertUsers(@ModelAttribute Users users, Model model) {
+	public String insertUsers(@ModelAttribute Users users, Model model) throws ParseException {
 		if (!StringUtils.validateEmail(users.getMail())) {
 			model.addAttribute("errorMail", "Mail không đúng định dạng");
 			return "register";
 		}
 
-		if (!StringUtils.isNumeric(users.getPhone())) {
-			model.addAttribute("errorPhone", "Điện thoại không đúng định dạng");
+		/*
+		 * if (!StringUtils.isNumeric(users.getPhone())) {
+		 * model.addAttribute("errorPhone", "Điện thoại không đúng định dạng"); return
+		 * "register"; }
+		 */
+		
+		if (!StringUtils.isPhone(users.getPhone())) {
+			model.addAttribute("errorPhone", "Điện thoại không đúng");
 			return "register";
 		}
 
 		int result = usersDao.insertUser(users);
 		if (result == 0) {
-			model.addAttribute("errorMessage", "tài khoản hoặc mail đã tồn tại");
+			model.addAttribute("errorMessage", "Tài khoản hoặc mail đã tồn tại");
 			return "register";
 		}
 		return "login";

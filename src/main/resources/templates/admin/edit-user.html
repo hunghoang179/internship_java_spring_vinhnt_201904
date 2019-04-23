@@ -48,8 +48,9 @@ footer {
 			</div>
 			<div class="col-lg-3"></div>
 			<div class="col-lg-6">
-				<form class="form-horizontal" id="editUser" method="post" th:action="@{/admin/thay-doi-thong-tin}">
-				<input type="hidden" name="id" th:value="${userById.getId()}">
+				<form class="form-horizontal" id="editUser" method="post"
+					th:action="@{/admin/thay-doi-thong-tin}">
+					<input type="hidden" name="id" th:value="${userById.getId()}">
 					<div class="form-group">
 						<label class="control-label col-sm-3" for="email">Tài
 							khoản:</label>
@@ -64,8 +65,9 @@ footer {
 						<label class="control-label col-sm-3" for="email">Mật
 							khẩu:</label>
 						<div class="col-sm-9">
-							<input type="password" class="form-control" name="password" th:value="${userById.getPassword()}"
-								id="password" placeholder="Mật khẩu">
+							<input type="password" class="form-control" name="password"
+								th:value="${userById.getPassword()}" id="password"
+								placeholder="Mật khẩu">
 						</div>
 					</div>
 					<div class="form-group">
@@ -90,6 +92,8 @@ footer {
 						<div class="col-sm-9">
 							<input type="text" class="form-control" name="phone" id="phone"
 								th:value="${userById.getPhone()}" placeholder="Điện thoại">
+							<span style="color: red;" th:if="${errorPhone != null}"
+								th:text="${errorPhone}"></span>
 						</div>
 					</div>
 					<div class="form-group" th:if="${not #lists.isEmpty(listRole)}">
@@ -97,10 +101,8 @@ footer {
 						<div class="col-sm-9">
 							<select name="role" id="role" class="form-control fill">
 								<th:block th:each="role : ${listRole}">
-									<option
-										th:selected="${role.getId() == userById.getRole()}"
-										th:value="${role.getId()}"
-										th:text="${role.getRoleName()}"></option>
+									<option th:selected="${role.getId() == userById.getRole()}"
+										th:value="${role.getId()}" th:text="${role.getRoleName()}"></option>
 								</th:block>
 							</select>
 						</div>
@@ -109,8 +111,10 @@ footer {
 						<label class="control-label col-sm-3" for="pwd">Trạng thái</label>
 						<div class="col-sm-9">
 							<select name="status" id="status" class="form-control fill">
-								<option th:selected="${userById.getStatus() == 0}" value="0">Hoạt động</option>
-								<option th:selected="${userById.getStatus() == 1}" value="1">Dừng hoạt động</option>
+								<option th:selected="${userById.getStatus() == 0}" value="0">Hoạt
+									động</option>
+								<option th:selected="${userById.getStatus() == 1}" value="1">Dừng
+									hoạt động</option>
 							</select>
 						</div>
 					</div>
@@ -132,25 +136,24 @@ footer {
 	<div th:replace="layout :: footer"></div>
 
 	<script>
-		$("#editUser").validate(
-				{
-					rules : {
-						password : "required",
-						address : "required",
-						phone : {
-							required : true,
-							number : true
-						}
-					},
-					messages : {
-						password : "Mật khẩu không được để trống",
-						address : "Địa chỉ không được để trống",
-						phone : {
-							required : "Điện thoại không được để trống",
-							number : "Số điện thoại không đúng"
-						}
-					}
-				});
+		$("#editUser").validate({
+			rules : {
+				password : "required",
+				address : "required",
+				phone : {
+					required : true,
+					number : true
+				}
+			},
+			messages : {
+				password : "Mật khẩu không được để trống",
+				address : "Địa chỉ không được để trống",
+				phone : {
+					required : "Điện thoại không được để trống",
+					number : "Số điện thoại không đúng"
+				}
+			}
+		});
 	</script>
 </body>
 </html>

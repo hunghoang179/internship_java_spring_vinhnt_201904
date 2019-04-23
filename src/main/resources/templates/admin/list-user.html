@@ -59,7 +59,7 @@ footer {
 					<thead>
 						<tr>
 							<th>Tài khoản</th>
-							<th>Mật khẩu</th>
+							<!-- <th>Mật khẩu</th> -->
 							<th>Mail</th>
 							<th>Địa chỉ</th>
 							<th>Điện thoại</th>
@@ -76,7 +76,7 @@ footer {
 						<th:block th:unless="${#lists.isEmpty(listUser)}">
 							<tr th:each="user : ${listUser}">
 								<td th:text="${user.getUsername()}"></td>
-								<td th:text="${user.getPassword()}">Không có dữ liệu</td>
+								<!-- <td th:text="${user.getPassword()}">Không có dữ liệu</td> -->
 								<td th:text="${user.getMail()}">Không có dữ liệu</td>
 								<td th:text="${user.getAddress()}">Không có dữ liệu</td>
 								<td th:text="${user.getPhone()}">Không có dữ liệu</td>

@@ -42,7 +42,7 @@
 	</select>
 
 	<select id="checkUpdateUser" resultMap="UserResultMap"
-		parameterType="String">
+		parameterType="Users">
 		SELECT
 		*
 		FROM
@@ -60,15 +60,18 @@
 
 	<insert id='insertUser' parameterType='Users'>
 		INSERT INTO
-		USERS(user_name, password, mail, address, phone)
+		USERS(user_name, password, mail, address, phone, create_user,
+		update_user, create_time, update_time)
 		VALUES(#{username},
-		#{password}, #{mail}, #{address}, #{phone})
+		#{password},
+		#{mail}, #{address}, #{phone}.
+		#{createUser},#{updateUser},{#createTime},#{updateTime})
 	</insert>
 
 	<update id='updateUser' parameterType='Users'>
 		UPDATE users u
 		SET
-		u.user_name = #{username}, u.password = #{password}, u.mail = #{mail},
+		u.user_name = #{username}, u.mail = #{mail},
 		u.address = #{address}, u.phone = #{phone}
 		WHERE u.id = #{id};
 	</update>
@@ -79,6 +82,14 @@
 		= #{password}, u.address = #{address}, u.phone = #{phone}, u.role =
 		#{role}, u.is_deleted = #{status}, u.update_user = #{updateUser},
 		u.update_time = #{updateTime}
+		WHERE u.id = #{id};
+	</update>
+
+	<update id='changePasswordUser' parameterType='Users'>
+		UPDATE users u
+		SET
+		u.password = #{password}, u.update_user = #{updateUser}, u.update_time
+		= #{updateTime}
 		WHERE u.id = #{id};
 	</update>
 </mapper>

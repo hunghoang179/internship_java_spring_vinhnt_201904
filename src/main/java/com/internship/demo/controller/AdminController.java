@@ -14,47 +14,53 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
+import com.internship.demo.dao.RoleDao;
+import com.internship.demo.dao.UsersDao;
 import com.internship.demo.domain.Users;
 import com.internship.demo.model.UserModel;
-import com.internship.demo.service.RoleServiceImpl;
-import com.internship.demo.service.UsersServiceImpl;
 import com.internship.demo.utils.StringUtils;
 
 @Controller
 @RequestMapping(path = "admin")
-@SessionAttributes("user")
+@SessionAttributes(names = { "user", "userById" })
 public class AdminController {
 
 	@Autowired
-	UsersServiceImpl usersServiceImpl;
+	UsersDao usersDao;
 
 	@Autowired
-	RoleServiceImpl roleService;
+	RoleDao roleDao;
 
 	@GetMapping(path = "/nguoi-dung")
 	public String redirectListUser(Model model) {
-		List<Users> listUser = usersServiceImpl.findAllUser();
+		List<Users> listUser = usersDao.findAllUser();
 		model.addAttribute("listUser", listUser);
 		return "/admin/list-user";
 	}
 
 	@GetMapping(path = "/thay-doi-thong-tin/{id}")
 	public String redirectEditUserPage(@SessionAttribute UserModel user, @PathVariable int id, Model model) {
-		Users userById = usersServiceImpl.findUserById(id);
+		Users userById = usersDao.findUserById(id);
 
 		if (user.getRole() == 2) {
-			model.addAttribute("listRole", roleService.getListRole());
+			model.addAttribute("listRole", roleDao.getListRole());
 		}
 
 		model.addAttribute("userById", userById);
 		return "/admin/edit-user";
 	}
-	
+
 	@PostMapping(path = "/thay-doi-thong-tin")
-	public String redirectEditUserPage(@SessionAttribute UserModel user,@ModelAttribute Users users, Model model) throws ParseException {
+	public String redirectEditUserPage(@SessionAttribute Users userById, @SessionAttribute UserModel user,
+			@ModelAttribute Users users, Model model) throws ParseException {
+		if (!StringUtils.isPhone(users.getPhone())) {
+			model.addAttribute("errorPhone", "Điện thoại không đúng");
+			model.addAttribute("userById", userById);
+			return "/admin/edit-user";
+		}
 		users.setUpdateTime(StringUtils.getTimestampNow());
 		users.setUpdateUser(user.getUsername());
-		usersServiceImpl.editUser(users);
+		usersDao.editUser(users);
 		return "redirect:/admin/nguoi-dung";
 	}
 

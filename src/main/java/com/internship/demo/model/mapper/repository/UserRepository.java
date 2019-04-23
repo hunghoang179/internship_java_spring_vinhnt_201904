@@ -41,9 +41,9 @@ public class UserRepository extends Repository<UserModelMapper> {
 		});
 	}
 
-	public List<Users> checkUpdateUser(String username, String mail, String id) {
+	public List<Users> checkUpdateUser(Users users) {
 		return execute(mapper -> {
-			return mapper.checkUpdateUser(username, mail, id);
+			return mapper.checkUpdateUser(users);
 		});
 	}
 
@@ -52,16 +52,22 @@ public class UserRepository extends Repository<UserModelMapper> {
 			mapper.updateUser(users);
 		});
 	}
-	
+
 	public Users findUserById(int id) {
 		return execute(mapper -> {
 			return mapper.findUserById(id);
 		});
 	}
-	
+
 	public void editUser(Users users) {
 		execute(mapper -> {
 			mapper.editUser(users);
+		});
+	}
+
+	public void changePasswordUser(Users users) {
+		execute(mapper -> {
+			mapper.changePasswordUser(users);
 		});
 	}
 

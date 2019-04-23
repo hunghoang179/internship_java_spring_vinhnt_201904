@@ -17,20 +17,16 @@ import com.internship.demo.service.UsersServiceImpl;
 @RequestMapping(path = "/ajax")
 public class AjaxController {
 	
-	@Autowired
-	UsersServiceImpl usersServiceImpl;
-	
-	@GetMapping(path = "/kiem-tra-user")
-	@ResponseBody
-	public String checkUpdateUser(@ModelAttribute Users user) {
-		System.out.println("000 chay");
-		List<Users> listUser = new UserRepository().checkUpdateUser(user.getUsername(), user.getMail(), user.getId()+"");
-		System.out.println(listUser.size());
-		if (!listUser.isEmpty()) {
-			return "false";
-		}
-		usersServiceImpl.updateUser(user);
-		return "ok";
-	}
+	/*
+	 * @Autowired UsersServiceImpl usersServiceImpl;
+	 * 
+	 * @GetMapping(path = "/kiem-tra-user")
+	 * 
+	 * @ResponseBody public String checkUpdateUser(@ModelAttribute Users user) {
+	 * List<Users> listUser = new
+	 * UserRepository().checkUpdateUser(user.getUsername(), user.getMail(),
+	 * user.getId()+""); if (!listUser.isEmpty()) { return "false"; }
+	 * usersServiceImpl.updateUser(user); return "ok"; }
+	 */
 
 }

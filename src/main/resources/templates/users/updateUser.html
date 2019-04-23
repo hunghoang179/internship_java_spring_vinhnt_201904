@@ -25,7 +25,7 @@ style>
 	margin-bottom: 0;
 }
 
-label.error {
+.error {
 	color: red;
 	font-size: 1.2rem;
 }
@@ -48,8 +48,8 @@ footer {
 			</div>
 			<div class="col-lg-3"></div>
 			<div class="col-lg-6">
-				<form class="form-horizontal" id="updateUser">
-					<input type="hidden" id="dataUser" th:value="${users.getId()}">
+				<form class="form-horizontal" id="updateUser" method="post"
+					th:action="@{/cap-nhat-thong-tin}">
 					<div class="form-group">
 						<label class="error" id="messageError"></label>
 					</div>
@@ -59,30 +59,24 @@ footer {
 
 						<div class="col-sm-9">
 							<input type="text" class="form-control" name="username"
-								id="username" th:value="${users.getUsername()}" readonly="readonly"
-								placeholder="Tài khoản">
-						</div>
-					</div>
-					<div class="form-group">
-						<label class="control-label col-sm-3" for="email">Mật
-							khẩu:</label>
-						<div class="col-sm-9">
-							<input type="password" class="form-control" name="password"
-								id="password" placeholder="Mật khẩu">
+								id="username" th:value="${user.getUsername()}"
+								readonly="readonly" placeholder="Tài khoản">
 						</div>
 					</div>
 					<div class="form-group">
 						<label class="control-label col-sm-3" for="pwd">Mail:</label>
 						<div class="col-sm-9">
 							<input type="email" class="form-control" name="mail" id="mail"
-								th:value="${users.getMail()}" placeholder="Mail">
+								th:value="${user.getMail()}" placeholder="Mail"> <span
+								class="error" th:if="${errorMail != null}"
+								th:text="${errorMail}"></span>
 						</div>
 					</div>
 					<div class="form-group">
 						<label class="control-label col-sm-3" for="pwd">Địa chỉ:</label>
 						<div class="col-sm-9">
 							<input type="text" class="form-control" name="address"
-								id="address" th:value="${users.getAddress()}"
+								id="address" th:value="${user.getAddress()}"
 								placeholder="Địa chỉ">
 						</div>
 					</div>
@@ -91,7 +85,9 @@ footer {
 							thoại:</label>
 						<div class="col-sm-9">
 							<input type="text" class="form-control" name="phone" id="phone"
-								th:value="${users.getPhone()}" placeholder="Điện thoại">
+								th:value="${user.getPhone()}" placeholder="Điện thoại">
+							<span class="error" th:if="${errorPhone != null}"
+								th:text="${errorPhone}"></span>
 						</div>
 					</div>
 					<div class="form-group">
@@ -99,7 +95,8 @@ footer {
 							<button type="submit" class="btn btn-default">Cập nhật</button>
 						</div>
 						<div class="col-sm-3">
-							<a th:href=@{/home}><button type="button" class="btn btn-default">Hủy</button></a>
+							<a th:href=@{/home}><button type="button"
+									class="btn btn-default">Hủy</button></a>
 						</div>
 					</div>
 				</form>
@@ -111,68 +108,67 @@ footer {
 	<div th:replace="layout :: footer"></div>
 
 	<script>
-		$("#updateUser").validate(
-				{
-					rules : {
-						username : "required",
-						password : "required",
-						address : "required",
-						phone : {
-							required : true,
-							number : true
+		$("#updateUser").validate({
+			rules : {
+				username : "required",
+				address : "required",
+				phone : {
+					required : true,
+					number : true
+				},
+				mail : {
+					required : true,
+					email : true
+				}
+			},
+			messages : {
+				username : "Tài khoản không được để trống",
+				address : "Địa chỉ không được để trống",
+				phone : {
+					required : "Điện thoại không được để trống",
+					number : "Số điện thoại không đúng"
+				},
+				mail : {
+					required : "Mail không được để trống",
+					email : "Mail không đúng định dạng"
+				}
+			},
+		/* submitHandler : function(form) {
+			var id = $("#dataUser").val();
+			var username = $("#username").val();
+			var phone = $("#phone").val();
+			var address = $("#address").val();
+			var password = $("#password").val();
+			var mail = $("#mail").val();
+			$
+					.ajax({
+						type : 'GET',
+						url : "/ajax/kiem-tra-user",
+						data : {
+							id : id,
+							username : username,
+							mail : mail,
+							phone : phone,
+							address : address,
+							password : password
+
 						},
-						mail : {
-							required : true,
-							email : true
-						}
-					},
-					messages : {
-						username : "Tài khoản không được để trống",
-						password : "Mật khẩu không được để trống",
-						address : "Địa chỉ không được để trống",
-						phone : {
-							required : "Điện thoại không được để trống",
-							number : "Số điện thoại không đúng"
-						},
-						mail : {
-							required : "Mail không được để trống",
-							email : "Mail không đúng định dạng"
-						}
-					},
-					submitHandler : function(form) {
-						var id = $("#dataUser").val();
-						var username = $("#username").val();
-						var phone = $("#phone").val();
-						var address = $("#address").val();
-						var password = $("#password").val();
-						var mail = $("#mail").val();
-						$.ajax({
-							type : 'GET',
-							url : "/ajax/kiem-tra-user",
-							data : {
-								id : id,
-								username : username,
-								mail : mail,
-								phone : phone,
-								address : address,
-								password : password
+						success : function(result) {
 
-							},
-							success : function(result) {
-
-								if (result == "ok") {
-									window.location.href = "http://localhost:8080/home";
-								}
-
-								if (result == "false") {
-									$("#messageError").text(
-											"Tài khoản hoặc mail đã tồn tại");
-									$("#messageError").show();
-								}
+							if (result == "ok") {
+								window.location.href = "http://localhost:8080/home";
 							}
-						});
-					}
-				});
+
+							if (result == "false") {
+								$("#messageError")
+										.text(
+												"Tài khoản hoặc mail đã tồn tại");
+								$("#messageError").show();
+							}
+						}
+					});
+		} */
+		});
 	</script>
 </body>
 </html>
