@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.ibatis.session.SqlSession;
 
 import com.internship.demo.domain.BorrowOrder;
+import com.internship.demo.model.BorrowBookDto;
 import com.internship.demo.model.mapper.BorrowOrderModelMapper;
 import com.internship.demo.mybaties.activemodel.Repository;
 
@@ -31,6 +32,30 @@ public class BorrowOrderRepository extends Repository<BorrowOrderModelMapper> {
 	public List<BorrowOrder> getListBorrowOrderByUser(Long id) {
 		return execute(mapper -> {
 			return mapper.getListBorrowOrderByUser(id);
+		});
+	}
+
+	public BorrowBookDto findBorrowOrderBookById(Long id) {
+		return execute(mapper -> {
+			return mapper.findBorrowOrderBookById(id);
+		});
+	}
+
+	public void updateStatusBorrowOrder(BorrowOrder borrowOrder) {
+		execute(mapper -> {
+			mapper.updateStatusBorrowOrder(borrowOrder);
+		});
+	}
+
+	public BorrowOrder findBorrowOrderById(Long id) {
+		return execute(mapper -> {
+			return mapper.findBorrowOrderById(id);
+		});
+	}
+
+	public Long countBorrowOrderByUser(Long id) {
+		return execute(mapper -> {
+			return mapper.countBorrowOrderByUser(id);
 		});
 	}
 

@@ -1,5 +1,7 @@
 package com.internship.demo.utils;
 
+import java.util.Date;
+import java.util.concurrent.TimeUnit;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.time.LocalDateTime;
@@ -29,6 +31,11 @@ public class StringUtils {
 		String formatDateTime = now.format(formatter);
 		Timestamp ts = Timestamp.valueOf(formatDateTime);
 		return ts;
+	}
+
+	public static long daysBetween2Dates(Date dateBegin, Date dateEnd) {
+		long diff = dateEnd.getTime() - dateBegin.getTime();
+		return TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
 	}
 
 }

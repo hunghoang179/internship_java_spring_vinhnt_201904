@@ -47,7 +47,7 @@
 
 	<update id='updateOutStockBook' parameterType='Book'>
 		UPDATE books b
-		SET
+		SET b.stock = #{stock},
 		b.out_stock = #{outStock}
 		WHERE b.id = #{id};
 	</update>

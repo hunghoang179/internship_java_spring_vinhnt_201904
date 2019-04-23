@@ -1,5 +1,6 @@
 package com.internship.demo.controller;
 
+import java.text.ParseException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,12 +21,13 @@ import com.internship.demo.dao.CategoryDao;
 import com.internship.demo.domain.Book;
 import com.internship.demo.domain.BorrowOrder;
 import com.internship.demo.domain.Category;
+import com.internship.demo.model.BorrowBookDto;
 import com.internship.demo.model.UserModel;
 import com.internship.demo.utils.StringUtils;
 
 @Controller
 @RequestMapping(path = "/book")
-@SessionAttributes("user")
+@SessionAttributes(names = { "user", "listBorrowOrder" })
 public class BookController {
 
 	@Autowired
@@ -144,11 +146,34 @@ public class BookController {
 	@PostMapping(path = "/borrow")
 	public String handleBorrowOrderBook(@SessionAttribute UserModel user, @ModelAttribute BorrowOrder borrowOrder,
 			Model model) {
+		List<Book> listBook = bookDao.getListBook();
+		List<Category> listCategory = categoryDao.getListCategory();
+		if (StringUtils.daysBetween2Dates(borrowOrder.getBorrowDate(), borrowOrder.getReturnDate()) > 30) {
+			model.addAttribute("error", "Không được mượn sách quá 30 ngày");
+			model.addAttribute("listBook", listBook);
+			model.addAttribute("listCategory", listCategory);
+			return "home";
+		}
+		Long totalBookBorrow = borrowOrderDao.countBorrowOrderByUser((long) user.getId());
+		if (user.getRole() == 0 && totalBookBorrow >= 5) {
+			model.addAttribute("error", "Bạn đã mượn số sách tối đa cho phép");
+			model.addAttribute("listBook", listBook);
+			model.addAttribute("listCategory", listCategory);
+			return "home";
+		} else if (user.getRole() == 1 && totalBookBorrow >= 10) {
+			model.addAttribute("error", "Bạn đã mượn số sách tối đa cho phép");
+			model.addAttribute("listBook", listBook);
+			model.addAttribute("listCategory", listCategory);
+			return "home";
+		} else if (user.getRole() == 1 && totalBookBorrow >= 15) {
+			model.addAttribute("error", "Bạn đã mượn số sách tối đa cho phép");
+			model.addAttribute("listBook", listBook);
+			model.addAttribute("listCategory", listCategory);
+			return "home";
+		}
 		Book book = bookDao.findBookById(borrowOrder.getIdBook());
 		if (book.getStock() <= book.getOutStock()) {
 			model.addAttribute("error", "Số lượng sách không đủ để mượn");
-			List<Book> listBook = bookDao.getListBook();
-			List<Category> listCategory = categoryDao.getListCategory();
 			model.addAttribute("listBook", listBook);
 			model.addAttribute("listCategory", listCategory);
 			return "home";
@@ -182,6 +207,72 @@ public class BookController {
 		}
 		model.addAttribute("listBorrowOrder", listBorrowOrder);
 		return "/borrow-order/borrow-order";
+	}
+
+	@GetMapping(path = "/danh-sach-muon-sach/phe-duyet/{id}")
+	public String redirectApproveBorrowOrderPage(@SessionAttribute UserModel user, @PathVariable Long id, Model model) {
+		BorrowBookDto borrowOrder = borrowOrderDao.findBorrowOrderBookById(id);
+		model.addAttribute("borrowOrderdetail", borrowOrder);
+		return "/borrow-order/approve-borrow";
+	}
+
+	@PostMapping(path = "/danh-sach-muon-sach/phe-duyet")
+	public String approveBorrowOrder(@SessionAttribute List<BorrowBookDto> listBorrowOrder,
+			@SessionAttribute UserModel user, @RequestParam long id, Model model) throws ParseException {
+		BorrowOrder borrowOrder = borrowOrderDao.findBorrowOrderById(id);
+		Book book = bookDao.findBookById(borrowOrder.getIdBook());
+		if (book.getStock() <= book.getOutStock()) {
+			model.addAttribute("error", "Số lượng sách không đủ để mượn");
+			model.addAttribute("listBorrowOrder", listBorrowOrder);
+			return "/borrow-order/borrow-order";
+		}
+		borrowOrder.setStatus(1);
+		borrowOrder.setUpdateUser(user.getUsername());
+		borrowOrder.setUpdateTime(StringUtils.getTimestampNow());
+		borrowOrderDao.updateStatusBorrowOrder(borrowOrder);
+		book.setOutStock(book.getOutStock() + 1);
+		bookDao.updateOutStockBook(book);
+		return "redirect:/book/danh-sach-muon-sach";
+	}
+
+	@GetMapping(path = "/danh-sach-muon-sach/tu-choi/{id}")
+	public String cancleBorrowOrder(@SessionAttribute UserModel user, @PathVariable long id, Model model)
+			throws ParseException {
+		BorrowOrder borrowOrder = borrowOrderDao.findBorrowOrderById(id);
+		borrowOrder.setStatus(2);
+		borrowOrder.setUpdateUser(user.getUsername());
+		borrowOrder.setUpdateTime(StringUtils.getTimestampNow());
+		borrowOrderDao.updateStatusBorrowOrder(borrowOrder);
+		return "redirect:/book/danh-sach-muon-sach";
+	}
+
+	@GetMapping(path = "/danh-sach-muon-sach/tra-sach/{id}")
+	public String returnBorrowOrder(@SessionAttribute UserModel user, @PathVariable long id, Model model)
+			throws ParseException {
+		BorrowOrder borrowOrder = borrowOrderDao.findBorrowOrderById(id);
+		borrowOrder.setStatus(3);
+		borrowOrder.setUpdateUser(user.getUsername());
+		borrowOrder.setUpdateTime(StringUtils.getTimestampNow());
+		borrowOrderDao.updateStatusBorrowOrder(borrowOrder);
+		Book book = bookDao.findBookById(borrowOrder.getIdBook());
+		book.setOutStock(book.getOutStock() - 1);
+		bookDao.updateOutStockBook(book);
+		return "redirect:/book/danh-sach-muon-sach";
+	}
+
+	@GetMapping(path = "/danh-sach-muon-sach/mat-sach/{id}")
+	public String missingBorrowOrder(@SessionAttribute UserModel user, @PathVariable long id, Model model)
+			throws ParseException {
+		BorrowOrder borrowOrder = borrowOrderDao.findBorrowOrderById(id);
+		borrowOrder.setStatus(4);
+		borrowOrder.setUpdateUser(user.getUsername());
+		borrowOrder.setUpdateTime(StringUtils.getTimestampNow());
+		borrowOrderDao.updateStatusBorrowOrder(borrowOrder);
+		Book book = bookDao.findBookById(borrowOrder.getIdBook());
+		book.setStock(book.getStock() - 1);
+		book.setOutStock(book.getOutStock() - 1);
+		bookDao.updateOutStockBook(book);
+		return "redirect:/book/danh-sach-muon-sach";
 	}
 
 }

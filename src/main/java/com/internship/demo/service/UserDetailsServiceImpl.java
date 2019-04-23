@@ -23,9 +23,7 @@ import com.internship.demo.model.mapper.repository.UserRepository;
 public class UserDetailsServiceImpl implements UserDetailsService {
 	
 	private static final Logger log = LoggerFactory.getLogger(UserDetailsServiceImpl.class);
-	
-	@Autowired
-	private PasswordEncoder passwordEncoder;
+
 
 	@Transactional
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -33,7 +31,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 		if (userModel == null) {
 			throw new UsernameNotFoundException("User not found");
 		}
-		userModel.setPassword(passwordEncoder.encode(userModel.getPassword()));
+		//userModel.setPassword(passwordEncoder.encode(userModel.getPassword()));
 		Set<GrantedAuthority> grantedAuthorities = new HashSet<>();
 		String rolesName = userModel.getRoleName();
 		grantedAuthorities.add(new SimpleGrantedAuthority(rolesName));

@@ -19,6 +19,7 @@ public class BorrowBookDto {
 	private String title;
 	private String stock;
 	private String outStock;
+	private String username;
 
 	public Long getId() {
 		return id;
@@ -131,5 +132,15 @@ public class BorrowBookDto {
 	public void setOutStock(String outStock) {
 		this.outStock = outStock;
 	}
+
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
+	
+	
 
 }

@@ -28,10 +28,11 @@
 				<br>
 				<th:block th:if="${user.getRole() != 0}">
 					<button type="button" class="btn btn-primary col-lg-offset-2"
-						data-toggle="modal" data-target=".bd-example-modal-lg">Thêm
-						mới sách</button>
+						data-toggle="modal" data-target="#addNewBook">Thêm mới
+						sách</button>
 				</th:block>
-				<p class="text-center" style="color: red;" th:if="${error != null}" th:text="${error}"></p>
+				<p class="text-center" style="color: red;" th:if="${error != null}"
+					th:text="${error}"></p>
 			</div>
 			<div class="col-lg-offset-2 col-lg-9">
 				<table id="table-list-book" class="table table-striped">
@@ -93,6 +94,7 @@
 																mượn:</label>
 															<div class="col-sm-9">
 																<input type="date" class="form-control"
+																	th:min="${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}"
 																	name="borrowDate">
 															</div>
 														</div>
@@ -101,6 +103,7 @@
 																trả:</label>
 															<div class="col-sm-9">
 																<input type="date" class="form-control"
+																	th:min="${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}"
 																	name="returnDate">
 															</div>
 														</div>
@@ -133,7 +136,7 @@
 
 	<!-- Modal add new book -->
 	<div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog"
-		aria-labelledby="myLargeModalLabel" aria-hidden="true">
+		id="addNewBook" aria-labelledby="myLargeModalLabel" aria-hidden="true">
 		<div class="modal-dialog modal-lg ">
 			<div class="modal-content">
 				<div class="modal-header">

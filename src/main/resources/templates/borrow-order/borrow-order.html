@@ -26,6 +26,7 @@
 			<div class="col-lg-12">
 				<h3 class="text-center">Danh sách mượn sách</h3>
 				<br>
+				<p class="text-center" style="color: red;" th:if="${error != null}" th:text="${error}"></p>
 			</div>
 			<div class="col-lg-offset-2 col-lg-9">
 				<table id="table-list-book" class="table table-striped">
@@ -33,6 +34,8 @@
 						<tr>
 							<th>STT</th>
 							<th>Tiêu đề sách</th>
+							<th>Ngày mượn</th>
+							<th>Ngày trả</th>
 							<th>Trạng thái</th>
 							<th></th>
 						</tr>
@@ -46,13 +49,24 @@
 						<th:block th:unless="${#lists.isEmpty(listBorrowOrder)}">
 							<tr th:each="borrowOrder,idx : ${listBorrowOrder}">
 								<td th:text="${idx.index+1}"></td>
+								<!-- <td th:text="${borrowOrder.getId()}">Không có dữ liệu</td> -->
 								<td th:text="${borrowOrder.getTitle()}">Không có dữ liệu</td>
+								<td th:text="${#dates.format(borrowOrder.getBorrowDate(), 'dd-MM-yyyy')}">Không có dữ liệu</td>
+								<td th:text="${#dates.format(borrowOrder.getReturnDate(), 'dd-MM-yyyy')}">Không có dữ liệu</td>
 								<td th:if="${borrowOrder.getStatus() == 0}" th:text="Pendding"></td>
 								<td th:if="${borrowOrder.getStatus() == 1}" th:text="|Đã duyệt|"></td>
+								<td th:if="${borrowOrder.getStatus() == 2}" th:text="|Từ chối|"></td>
+								<td th:if="${borrowOrder.getStatus() == 3}" th:text="|Trả sách|"></td>
+								<td th:if="${borrowOrder.getStatus() == 4}" th:text="|Mất sách|"></td>
 								<th:block th:if="${user.getRole() == 1}">
 									<td>
-										<a><i class="farfa-eye"> </i></a> 
-										<a><i class="fas fa-book-medical"></i></a>
+										<th:block th:if="${borrowOrder.getStatus() == 0}">
+											<a th:href="@{/book/danh-sach-muon-sach/phe-duyet/{id}(id=${borrowOrder.getId()})}"><i class="fas fa-book-medical"></i></a>
+										</th:block>
+										<th:block th:if="${borrowOrder.getStatus() == 1}">
+											<a th:href="@{/book/danh-sach-muon-sach/tra-sach/{id}(id=${borrowOrder.getId()})}"><i class="fas fa-exchange-alt"></i></a>
+											<a th:href="@{/book/danh-sach-muon-sach/mat-sach/{id}(id=${borrowOrder.getId()})}"><i class="fas fa-times-circle"></i></a>
+										</th:block>
 									</td>
 								</th:block>
 							</tr>

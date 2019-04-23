@@ -3,6 +3,7 @@ package com.internship.demo.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.internship.demo.dao.UsersDao;
@@ -15,6 +16,9 @@ public class UsersServiceImpl implements UsersDao {
 
 	@Autowired
 	UserRepository userRepository;
+	
+	@Autowired
+	private PasswordEncoder passwordEncoder;
 
 	@Override
 	public List<Users> findAllUser() {
@@ -34,12 +38,14 @@ public class UsersServiceImpl implements UsersDao {
 		if (!listUser.isEmpty() || listUser.size() > 0) {
 			return 0;
 		}
+		users.setPassword(passwordEncoder.encode(users.getPassword()));
 		userRepository.insertUser(users);
 		return 1;
 	}
 
 	@Override
 	public void updateUser(Users users) {
+		users.setPassword(passwordEncoder.encode(users.getPassword()));
 		userRepository.updateUser(users);
 	}
 

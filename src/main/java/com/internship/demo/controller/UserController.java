@@ -22,19 +22,18 @@ public class UserController {
 	@Autowired
 	UsersDao usersDao;
 
-
 	@PostMapping(path = "/register")
 	public String insertUsers(@ModelAttribute Users users, Model model) {
 		if (!StringUtils.validateEmail(users.getMail())) {
 			model.addAttribute("errorMail", "Mail không đúng định dạng");
 			return "register";
 		}
-		
+
 		if (!StringUtils.isNumeric(users.getPhone())) {
 			model.addAttribute("errorPhone", "Điện thoại không đúng định dạng");
 			return "register";
 		}
-		
+
 		int result = usersDao.insertUser(users);
 		if (result == 0) {
 			model.addAttribute("errorMessage", "tài khoản hoặc mail đã tồn tại");

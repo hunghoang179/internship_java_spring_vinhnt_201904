@@ -7,11 +7,12 @@ import org.springframework.stereotype.Service;
 
 import com.internship.demo.dao.BorrowOrderDao;
 import com.internship.demo.domain.BorrowOrder;
+import com.internship.demo.model.BorrowBookDto;
 import com.internship.demo.model.mapper.repository.BorrowOrderRepository;
 
 @Service
-public class BorrowOrderService implements BorrowOrderDao{
-	
+public class BorrowOrderService implements BorrowOrderDao {
+
 	@Autowired
 	BorrowOrderRepository borrowOrderRepository;
 
@@ -28,6 +29,26 @@ public class BorrowOrderService implements BorrowOrderDao{
 	@Override
 	public List<BorrowOrder> getListBorrowOrderByUser(Long id) {
 		return borrowOrderRepository.getListBorrowOrderByUser(id);
+	}
+
+	@Override
+	public BorrowBookDto findBorrowOrderBookById(Long id) {
+		return borrowOrderRepository.findBorrowOrderBookById(id);
+	}
+
+	@Override
+	public void updateStatusBorrowOrder(BorrowOrder borrowOrder) {
+		borrowOrderRepository.updateStatusBorrowOrder(borrowOrder);
+	}
+
+	@Override
+	public BorrowOrder findBorrowOrderById(Long id) {
+		return borrowOrderRepository.findBorrowOrderById(id);
+	}
+
+	@Override
+	public Long countBorrowOrderByUser(Long id) {
+		return borrowOrderRepository.countBorrowOrderByUser(id);
 	}
 
 }
