@@ -3,9 +3,12 @@ package com.internship.demo.controller;
 import java.text.ParseException;
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -144,12 +147,27 @@ public class BookController {
 	}
 
 	@PostMapping(path = "/borrow")
-	public String handleBorrowOrderBook(@SessionAttribute UserModel user, @ModelAttribute BorrowOrder borrowOrder,
-			Model model) {
+	public String handleBorrowOrderBook(@SessionAttribute UserModel user,
+			@ModelAttribute @Valid BorrowOrder borrowOrder, BindingResult bindingResult, Model model) {
+
 		List<Book> listBook = bookDao.getListBook();
 		List<Category> listCategory = categoryDao.getListCategory();
-		if (StringUtils.daysBetween2Dates(borrowOrder.getBorrowDate(), borrowOrder.getReturnDate()) > 30) {
-			model.addAttribute("error", "Không được mượn sách quá 30 ngày");
+		
+		if (bindingResult.hasErrors()) {
+			model.addAttribute("error", "Lỗi ngày tháng mượn trả sách");
+			model.addAttribute("listBook", listBook);
+			model.addAttribute("listCategory", listCategory);
+			return "home";
+		}
+		if (borrowOrder.getBorrowDate() != null && borrowOrder.getReturnDate() != null) {
+			if (StringUtils.daysBetween2Dates(borrowOrder.getBorrowDate(), borrowOrder.getReturnDate()) > 30) {
+				model.addAttribute("error", "Không được mượn sách quá 30 ngày");
+				model.addAttribute("listBook", listBook);
+				model.addAttribute("listCategory", listCategory);
+				return "home";
+			}
+		} else {
+			model.addAttribute("error", "Lỗi ngày tháng mượn trả sách");
 			model.addAttribute("listBook", listBook);
 			model.addAttribute("listCategory", listCategory);
 			return "home";

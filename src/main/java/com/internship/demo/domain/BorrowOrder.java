@@ -3,13 +3,20 @@ package com.internship.demo.domain;
 import java.sql.Date;
 import java.sql.Timestamp;
 
+import javax.validation.constraints.NotNull;
+
 public class BorrowOrder {
 
 	private Long id;
 	private Long idUser;
 	private Long idBook;
+
+	@NotNull
 	private Date borrowDate;
+
+	@NotNull
 	private Date returnDate;
+
 	private String note;
 	private Integer status;
 	private String createUser;

@@ -93,7 +93,9 @@
 															<label class="control-label col-sm-3" for="pwd">Ngày
 																mượn:</label>
 															<div class="col-sm-9">
-																<input type="date" class="form-control"
+																<input type="date" class="form-control" id="borrowDate" required
+																	data-validation="date"
+																	data-validation-format="yyyy-MM-dd"
 																	th:min="${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}"
 																	name="borrowDate">
 															</div>
@@ -102,7 +104,9 @@
 															<label class="control-label col-sm-3" for="pwd">Ngày
 																trả:</label>
 															<div class="col-sm-9">
-																<input type="date" class="form-control"
+																<input type="date" class="form-control" id="returnDate" required
+																	data-validation="date"
+																	data-validation-format="yyyy-MM-dd"
 																	th:min="${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}"
 																	name="returnDate">
 															</div>
@@ -256,6 +260,17 @@
 					}
 				}
 			});
+
+			/* $("#borrowBook").validate({
+				rules : {
+					borrowDate : "required",
+					returnDate : "required"
+				},
+				messages : {
+					borrowDate : "Ngày mượn sách không được để trống",
+					returnDate : "Ngày trả sách không được để trống"
+				}
+			}); */
 		});
 	</script>
 	<div th:replace="layout :: footer"></div>
