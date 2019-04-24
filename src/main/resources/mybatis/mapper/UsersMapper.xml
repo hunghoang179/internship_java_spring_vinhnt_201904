@@ -41,6 +41,24 @@
 		u.user_name = #{username}
 	</select>
 
+	<select id="findUserByMail" resultMap="UserResultMap"
+		parameterType="String">
+		SELECT
+		*
+		FROM
+		users u WHERE
+		u.mail = #{mail}
+	</select>
+
+	<select id="findUserByToken" resultMap="UserResultMap"
+		parameterType="String">
+		SELECT
+		*
+		FROM
+		users u WHERE
+		u.token = #{token}
+	</select>
+
 	<select id="checkUpdateUser" resultMap="UserResultMap"
 		parameterType="Users">
 		SELECT
@@ -72,7 +90,8 @@
 		UPDATE users u
 		SET
 		u.user_name = #{username}, u.mail = #{mail},
-		u.address = #{address}, u.phone = #{phone}
+		u.address = #{address},
+		u.phone = #{phone}
 		WHERE u.id = #{id};
 	</update>
 

@@ -3,7 +3,7 @@ package com.internship.demo.domain;
 import java.sql.Timestamp;
 
 public class Users {
-	
+
 	private int id;
 	private String username;
 	private String password;
@@ -16,6 +16,7 @@ public class Users {
 	private Timestamp createTime;
 	private Timestamp updateTime;
 	private int status;
+	private String token;
 
 	public int getId() {
 		return id;
@@ -112,5 +113,13 @@ public class Users {
 	public void setStatus(int status) {
 		this.status = status;
 	}
-	
+
+	public String getToken() {
+		return token;
+	}
+
+	public void setToken(String token) {
+		this.token = token;
+	}
+
 }

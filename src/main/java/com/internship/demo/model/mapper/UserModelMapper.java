@@ -1,7 +1,7 @@
 package com.internship.demo.model.mapper;
 
 import java.util.List;
-
+import java.util.Optional;
 import com.internship.demo.domain.Users;
 import com.internship.demo.model.UserModel;
 
@@ -24,4 +24,8 @@ public interface UserModelMapper {
 	void editUser(Users users);
 
 	void changePasswordUser(Users users);
+
+	Optional<Users> findUserByMail(String mail);
+
+	Optional<Users> findUserByToken(String token);
 }

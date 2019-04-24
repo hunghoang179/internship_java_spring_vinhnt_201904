@@ -1,6 +1,7 @@
 package com.internship.demo.model.mapper.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.apache.ibatis.session.SqlSession;
 
@@ -68,6 +69,18 @@ public class UserRepository extends Repository<UserModelMapper> {
 	public void changePasswordUser(Users users) {
 		execute(mapper -> {
 			mapper.changePasswordUser(users);
+		});
+	}
+
+	public Optional<Users> findUserByMail(String mail) {
+		return execute(mapper -> {
+			return mapper.findUserByMail(mail);
+		});
+	}
+
+	public Optional<Users> findUserByToken(String token) {
+		return execute(mapper -> {
+			return mapper.findUserByToken(token);
 		});
 	}
 

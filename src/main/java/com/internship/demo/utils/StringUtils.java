@@ -13,6 +13,8 @@ public class StringUtils {
 
 	private static final String EMAIL_REGEX = "^[\\w-\\+]+(\\.[\\w]+)*@[\\w-]+(\\.[\\w]+)*(\\.[a-z]{2,})$";
 	private static final String PHONE_REGEX = "(09|01[2|6|8|9])+([0-9]{8})\\b";
+	private static final String ALPHA_NUMERIC_STRING = "ABCDEFGHIJKLMNOPQRSTUVWXYZ" + "0123456789"
+			+ "abcdefghijklmnopqrstuvxyz";
 	private static Pattern pattern;
 	private static Matcher matcher;
 
@@ -41,6 +43,17 @@ public class StringUtils {
 	public static long daysBetween2Dates(Date dateBegin, Date dateEnd) {
 		long diff = dateEnd.getTime() - dateBegin.getTime();
 		return TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
+	}
+
+	public static String generateRandomPassword(int lenght) {
+		StringBuilder sb = new StringBuilder(lenght);
+		for (int i = 0; i < lenght; i++) {
+			int index = (int) (ALPHA_NUMERIC_STRING.length() * Math.random());
+
+			sb.append(ALPHA_NUMERIC_STRING.charAt(index));
+		}
+
+		return sb.toString();
 	}
 
 }

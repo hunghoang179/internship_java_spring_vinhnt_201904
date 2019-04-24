@@ -2,6 +2,7 @@ package com.internship.demo.service;
 
 import java.text.ParseException;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -74,6 +75,16 @@ public class UsersServiceImpl implements UsersDao {
 	@Override
 	public List<Users> checkUpdateUser(Users users) {
 		return userRepository.checkUpdateUser(users);
+	}
+
+	@Override
+	public Optional<Users> findUserByMail(String mail) {
+		return userRepository.findUserByMail(mail);
+	}
+
+	@Override
+	public Optional<Users> findUserByToken(String token) {
+		return userRepository.findUserByToken(token);
 	}
 
 }
