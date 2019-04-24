@@ -31,12 +31,14 @@
 		bo.status,
 		b.title, b.stock, b.out_stock
 		FROM borrow_orders bo
-		JOIN books
+		INNER JOIN
+		books
 		b
 		ON bo.id_book = b.id
 	</select>
-	
-	<select id="findBorrowOrderById" parameterType="Long" resultMap="BorrowOrderResultMap">
+
+	<select id="findBorrowOrderById" parameterType="Long"
+		resultMap="BorrowOrderResultMap">
 		SELECT *
 		FROM borrow_orders bo
 		WHERE bo.id = #{id}
@@ -51,9 +53,10 @@
 		b.title, b.stock, b.out_stock
 		FROM
 		borrow_orders bo
-		JOIN books b
+		INNER JOIN books b
 		ON bo.id_book = b.id
-		WHERE bo.id_user =
+		WHERE bo.id_user
+		=
 		#{id}
 	</select>
 
@@ -66,18 +69,21 @@
 		b.title, b.stock, b.out_stock
 		FROM
 		borrow_orders bo
-		JOIN books b
+		INNER JOIN books b
 		ON bo.id_book = b.id
-		JOIN users u
+		INNER JOIN users
+		u
 		ON
 		bo.id_user = u.id
 		WHERE bo.id = #{id}
 	</select>
-	
-	<select id="countBorrowOrderByUser" parameterType="Long" resultType="Long">
+
+	<select id="countBorrowOrderByUser" parameterType="Long"
+		resultType="Long">
 		SELECT COUNT(*)
 		FROM borrow_orders bo
-		WHERE bo.id_user = #{id}
+		WHERE bo.id_user =
+		#{id}
 		AND (bo.status = 0 OR bo.status = 1)
 	</select>
 
@@ -90,8 +96,10 @@
 	</insert>
 
 	<update id='updateStatusBorrowOrder' parameterType='BorrowOrder'>
-		UPDATE borrow_orders bo
-		SET bo.status = #{status}, bo.update_user = #{updateUser},
+		UPDATE
+		borrow_orders bo
+		SET bo.status = #{status}, bo.update_user =
+		#{updateUser},
 		bo.update_time
 		= #{updateTime} WHERE bo.id = #{id};
 	</update>

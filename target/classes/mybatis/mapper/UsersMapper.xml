@@ -91,7 +91,7 @@
 		SET
 		u.user_name = #{username}, u.mail = #{mail},
 		u.address = #{address},
-		u.phone = #{phone}
+		u.phone = #{phone}, u.token = #{token}
 		WHERE u.id = #{id};
 	</update>
 
