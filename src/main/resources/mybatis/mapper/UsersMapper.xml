@@ -82,8 +82,8 @@
 		update_user, create_time, update_time)
 		VALUES(#{username},
 		#{password},
-		#{mail}, #{address}, #{phone}.
-		#{createUser},#{updateUser},{#createTime},#{updateTime})
+		#{mail}, #{address}, #{phone},
+		#{createUser},#{updateUser},#{createTime},#{updateTime})
 	</insert>
 
 	<update id='updateUser' parameterType='Users'>
