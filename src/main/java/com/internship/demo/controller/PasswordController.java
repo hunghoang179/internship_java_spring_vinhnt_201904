@@ -2,9 +2,7 @@ package com.internship.demo.controller;
 
 import java.util.Optional;
 import java.util.UUID;
-
 import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -15,7 +13,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
 import com.internship.demo.dao.EmailDao;
 import com.internship.demo.dao.UsersDao;
 import com.internship.demo.domain.Users;
@@ -24,99 +21,101 @@ import com.internship.demo.domain.Users;
 @RequestMapping("/forgot")
 public class PasswordController {
 
-	@Autowired
-	UsersDao usersDao;
+  @Autowired
+  UsersDao usersDao;
 
-	@Autowired
-	EmailDao emailDao;
+  @Autowired
+  EmailDao emailDao;
 
-	@Autowired
-	private PasswordEncoder passwordEncoder;
+  @Autowired
+  private PasswordEncoder passwordEncoder;
 
-	@GetMapping
-	public String displayForgotPasswordPage() {
-		return "forgot-password";
-	}
+  @GetMapping
+  public String displayForgotPasswordPage() {
+    return "forgot-password";
+  }
 
-	@PostMapping
-	public String processForgotPasswordForm(Model model, @RequestParam("mail") String mail,
-			HttpServletRequest request) {
+  @PostMapping
+  public String processForgotPasswordForm(Model model, @RequestParam("mail") String mail,
+      HttpServletRequest request) {
 
-		Optional<Users> optional = usersDao.findUserByMail(mail);
-		
-		if (optional.isPresent()) {
-			Users user = optional.get();
-			user.setToken(UUID.randomUUID().toString());
-			usersDao.updateUser(user);
+    Optional<Users> optional = usersDao.findUserByMail(mail);
 
-			String appUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
+    if (optional.isPresent()) {
+      Users user = optional.get();
+      user.setToken(UUID.randomUUID().toString());
+      usersDao.updateUser(user);
 
-			// Email message
-			SimpleMailMessage passwordResetEmail = new SimpleMailMessage();
-			passwordResetEmail.setFrom("adminsystem@gmail.com");
-			passwordResetEmail.setTo(user.getMail());
-			passwordResetEmail.setSubject("Password Reset Request");
-			passwordResetEmail.setText("Quên mật khẩu, click vào linh để đặt lại mật khẩu của bạn:\n" + appUrl
-					+ "/forgot/reset?token=" + user.getToken());
+      String appUrl =
+          request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
 
-			emailDao.sendEmail(passwordResetEmail);
-		}
+      // Email message
+      SimpleMailMessage passwordResetEmail = new SimpleMailMessage();
+      passwordResetEmail.setFrom("adminsystem@gmail.com");
+      passwordResetEmail.setTo(user.getMail());
+      passwordResetEmail.setSubject("Password Reset Request");
+      passwordResetEmail.setText("Quên mật khẩu, click vào linh để đặt lại mật khẩu của bạn:\n"
+          + appUrl + "/forgot/reset?token=" + user.getToken());
 
-		model.addAttribute("successMessage", "Link đặt lại mật khẩu đã được gửi tới email " + mail);
+      emailDao.sendEmail(passwordResetEmail);
+    }
 
-		return "forgot-password";
+    model.addAttribute("successMessage", "Link đặt lại mật khẩu đã được gửi tới email " + mail);
 
-	}
+    return "forgot-password";
 
-	@GetMapping("/reset")
-	public String displayResetPasswordPage(Model model, @RequestParam("token") String token) {
+  }
 
-		Optional<Users> user = usersDao.findUserByToken(token);
+  @GetMapping("/reset")
+  public String displayResetPasswordPage(Model model, @RequestParam("token") String token) {
 
-		if (user.isPresent()) {
-			model.addAttribute("token", token);
-		} else {
-			model.addAttribute("errorMessage", "Lỗi! Link reset mật khẩu không đúng.");
-			return "403";
-		}
+    Optional<Users> user = usersDao.findUserByToken(token);
 
-		return "reset-password";
-	}
+    if (user.isPresent()) {
+      model.addAttribute("token", token);
+    } else {
+      model.addAttribute("errorMessage", "Lỗi! Link reset mật khẩu không đúng.");
+      return "403";
+    }
 
-	@PostMapping("/reset")
-	public String setNewPassword(Model model, @RequestParam String token, @RequestParam String passwordNew,
-			@RequestParam("rePassword") String rePassword, RedirectAttributes redir) {
+    return "reset-password";
+  }
 
-		Optional<Users> user = usersDao.findUserByToken(token);
+  @PostMapping("/reset")
+  public String setNewPassword(Model model, @RequestParam String token,
+      @RequestParam String passwordNew, @RequestParam("rePassword") String rePassword,
+      RedirectAttributes redir) {
 
-		if (!passwordNew.equals(rePassword)) {
-			model.addAttribute("errorMessage", "Mật khẩu xác nhận không đúng");
-			return "reset-password";
-		}
+    Optional<Users> user = usersDao.findUserByToken(token);
 
-		if (passwordNew == null || rePassword == null) {
-			model.addAttribute("errorMessage", "Mật khẩu không được để trống");
-			return "reset-password";
-		} else {
-			if (user.isPresent()) {
+    if (!passwordNew.equals(rePassword)) {
+      model.addAttribute("errorMessage", "Mật khẩu xác nhận không đúng");
+      return "reset-password";
+    }
 
-				Users resetUser = user.get();
+    if (passwordNew == null || rePassword == null) {
+      model.addAttribute("errorMessage", "Mật khẩu không được để trống");
+      return "reset-password";
+    } else {
+      if (user.isPresent()) {
 
-				resetUser.setPassword(passwordEncoder.encode(passwordNew));
+        Users resetUser = user.get();
 
-				resetUser.setToken(null);
+        resetUser.setPassword(passwordEncoder.encode(passwordNew));
 
-				usersDao.changePasswordUser(resetUser);
+        resetUser.setToken(null);
 
-				usersDao.updateUser(resetUser);
+        usersDao.changePasswordUser(resetUser);
 
-				return "redirect:/login";
+        usersDao.updateUser(resetUser);
 
-			} else {
-				model.addAttribute("errorMessage", "Xảy ra lỗi");
-			}
-		}
-		return "reset-password";
-	}
+        return "redirect:/login";
+
+      } else {
+        model.addAttribute("errorMessage", "Xảy ra lỗi");
+      }
+    }
+    return "reset-password";
+  }
 
 }

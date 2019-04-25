@@ -7,25 +7,25 @@ import com.internship.demo.model.UserModel;
 
 public interface UserModelMapper {
 
-	List<Users> findAllUser();
+  List<Users> findAllUser();
 
-	UserModel findUserByUsername(String username);
+  UserModel findUserByUsername(String username);
 
-	int insertUser(Users users);
+  int insertUser(Users users);
 
-	List<Users> findUserByUsernameOrMail(String username, String mail);
+  List<Users> findUserByUsernameOrMail(String username, String mail);
 
-	List<Users> checkUpdateUser(Users users);
+  List<Users> checkUpdateUser(Users users);
 
-	void updateUser(Users users);
+  void updateUser(Users users);
 
-	Users findUserById(int id);
+  Users findUserById(int id);
 
-	void editUser(Users users);
+  void editUser(Users users);
 
-	void changePasswordUser(Users users);
+  void changePasswordUser(Users users);
 
-	Optional<Users> findUserByMail(String mail);
+  Optional<Users> findUserByMail(String mail);
 
-	Optional<Users> findUserByToken(String token);
+  Optional<Users> findUserByToken(String token);
 }

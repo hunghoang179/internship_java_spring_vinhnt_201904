@@ -14,35 +14,28 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
-	@Autowired
-	private UserDetailsService userDetailsService;
+  @Autowired
+  private UserDetailsService userDetailsService;
 
-	@Bean
-	public PasswordEncoder passwordEncoder() {
-		return new BCryptPasswordEncoder();
-	}
+  @Bean
+  public PasswordEncoder passwordEncoder() {
+    return new BCryptPasswordEncoder();
+  }
 
-	@Autowired
-	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-		auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
-	}
+  @Autowired
+  public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
+    auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
+  }
 
-	@Override
-	protected void configure(HttpSecurity http) throws Exception {
-		http
-			.authorizeRequests()
-				.antMatchers("/register").permitAll()
-				.antMatchers("/home").hasAnyAuthority("USER","ADMIN","LIBRARIAN")
-				.antMatchers("/admin/*").hasAnyAuthority("ADMIN","LIBRARIAN")
-				.antMatchers("/book/admin/**").hasAnyAuthority("ADMIN","LIBRARIAN")
-				.antMatchers("book/the-loai-sach").hasAnyAuthority("ADMIN","LIBRARIAN")
-				.and()
-			.formLogin()
-				.loginPage("/login").usernameParameter("username").passwordParameter("password")
-				.defaultSuccessUrl("/home")
-				.failureUrl("/login?error").and()
-			.exceptionHandling()
-				.accessDeniedPage("/403");
-	}
+  @Override
+  protected void configure(HttpSecurity http) throws Exception {
+    http.authorizeRequests().antMatchers("/register").permitAll().antMatchers("/home")
+        .hasAnyAuthority("USER", "ADMIN", "LIBRARIAN").antMatchers("/admin/*")
+        .hasAnyAuthority("ADMIN", "LIBRARIAN").antMatchers("/book/admin/**")
+        .hasAnyAuthority("ADMIN", "LIBRARIAN").antMatchers("book/the-loai-sach")
+        .hasAnyAuthority("ADMIN", "LIBRARIAN").and().formLogin().loginPage("/login")
+        .usernameParameter("username").passwordParameter("password").defaultSuccessUrl("/home")
+        .failureUrl("/login?error").and().exceptionHandling().accessDeniedPage("/403");
+  }
 
 }

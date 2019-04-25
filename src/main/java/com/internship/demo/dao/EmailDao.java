@@ -4,5 +4,5 @@ import org.springframework.mail.SimpleMailMessage;
 
 public interface EmailDao {
 
-	void sendEmail(SimpleMailMessage email);
+  void sendEmail(SimpleMailMessage email);
 }

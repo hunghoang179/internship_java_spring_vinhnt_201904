@@ -2,9 +2,7 @@ package com.internship.demo.model.mapper.repository;
 
 import java.util.List;
 import java.util.Optional;
-
 import org.apache.ibatis.session.SqlSession;
-
 import com.internship.demo.domain.Users;
 import com.internship.demo.model.UserModel;
 import com.internship.demo.model.mapper.UserModelMapper;
@@ -13,75 +11,75 @@ import com.internship.demo.mybaties.activemodel.Repository;
 @org.springframework.stereotype.Repository
 public class UserRepository extends Repository<UserModelMapper> {
 
-	@Override
-	protected UserModelMapper repositoryMapper(SqlSession session) {
-		return session.getMapper(UserModelMapper.class);
-	}
+  @Override
+  protected UserModelMapper repositoryMapper(SqlSession session) {
+    return session.getMapper(UserModelMapper.class);
+  }
 
-	public UserModel findUserByUsername(String username) {
-		return execute(mapper -> {
-			return mapper.findUserByUsername(username);
-		});
-	}
+  public UserModel findUserByUsername(String username) {
+    return execute(mapper -> {
+      return mapper.findUserByUsername(username);
+    });
+  }
 
-	public List<Users> findAllUser() {
-		return execute(mapper -> {
-			return mapper.findAllUser();
-		});
-	}
+  public List<Users> findAllUser() {
+    return execute(mapper -> {
+      return mapper.findAllUser();
+    });
+  }
 
-	public List<Users> findUserByUsernameOrMail(String username, String mail) {
-		return execute(mapper -> {
-			return mapper.findUserByUsernameOrMail(username, mail);
-		});
-	}
+  public List<Users> findUserByUsernameOrMail(String username, String mail) {
+    return execute(mapper -> {
+      return mapper.findUserByUsernameOrMail(username, mail);
+    });
+  }
 
-	public int insertUser(Users users) {
-		return execute(mapper -> {
-			return mapper.insertUser(users);
-		});
-	}
+  public int insertUser(Users users) {
+    return execute(mapper -> {
+      return mapper.insertUser(users);
+    });
+  }
 
-	public List<Users> checkUpdateUser(Users users) {
-		return execute(mapper -> {
-			return mapper.checkUpdateUser(users);
-		});
-	}
+  public List<Users> checkUpdateUser(Users users) {
+    return execute(mapper -> {
+      return mapper.checkUpdateUser(users);
+    });
+  }
 
-	public void updateUser(Users users) {
-		execute(mapper -> {
-			mapper.updateUser(users);
-		});
-	}
+  public void updateUser(Users users) {
+    execute(mapper -> {
+      mapper.updateUser(users);
+    });
+  }
 
-	public Users findUserById(int id) {
-		return execute(mapper -> {
-			return mapper.findUserById(id);
-		});
-	}
+  public Users findUserById(int id) {
+    return execute(mapper -> {
+      return mapper.findUserById(id);
+    });
+  }
 
-	public void editUser(Users users) {
-		execute(mapper -> {
-			mapper.editUser(users);
-		});
-	}
+  public void editUser(Users users) {
+    execute(mapper -> {
+      mapper.editUser(users);
+    });
+  }
 
-	public void changePasswordUser(Users users) {
-		execute(mapper -> {
-			mapper.changePasswordUser(users);
-		});
-	}
+  public void changePasswordUser(Users users) {
+    execute(mapper -> {
+      mapper.changePasswordUser(users);
+    });
+  }
 
-	public Optional<Users> findUserByMail(String mail) {
-		return execute(mapper -> {
-			return mapper.findUserByMail(mail);
-		});
-	}
+  public Optional<Users> findUserByMail(String mail) {
+    return execute(mapper -> {
+      return mapper.findUserByMail(mail);
+    });
+  }
 
-	public Optional<Users> findUserByToken(String token) {
-		return execute(mapper -> {
-			return mapper.findUserByToken(token);
-		});
-	}
+  public Optional<Users> findUserByToken(String token) {
+    return execute(mapper -> {
+      return mapper.findUserByToken(token);
+    });
+  }
 
 }
