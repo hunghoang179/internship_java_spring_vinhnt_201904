@@ -10,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.internship.demo.dao.UsersDao;
 import com.internship.demo.domain.Users;
@@ -25,17 +26,17 @@ public class UserController {
 	UsersDao usersDao;
 
 	@PostMapping(path = "/register")
-	public String insertUsers(@ModelAttribute Users users, Model model) throws ParseException {
+	public String insertUsers(@ModelAttribute Users users, @RequestParam String rePassword, Model model) throws ParseException {
+		
+		if(!users.getPassword().equals(rePassword)) {
+			model.addAttribute("errorPassword", "Mật khẩu xác nhận không đúng");
+			return "register";
+		}
+		
 		if (!StringUtils.validateEmail(users.getMail())) {
 			model.addAttribute("errorMail", "Mail không đúng định dạng");
 			return "register";
 		}
-
-		/*
-		 * if (!StringUtils.isNumeric(users.getPhone())) {
-		 * model.addAttribute("errorPhone", "Điện thoại không đúng định dạng"); return
-		 * "register"; }
-		 */
 		
 		if (!StringUtils.isPhone(users.getPhone())) {
 			model.addAttribute("errorPhone", "Điện thoại không đúng");

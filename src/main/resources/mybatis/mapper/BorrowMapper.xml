@@ -29,12 +29,12 @@
 		bo.id_user,
 		bo.id_book, bo.borrow_date, bo.return_date, bo.note,
 		bo.status,
-		b.title, b.stock, b.out_stock
+		b.title, b.stock, b.out_stock, u.user_name
 		FROM borrow_orders bo
-		INNER JOIN
-		books
-		b
+		INNER JOIN books b 
 		ON bo.id_book = b.id
+		INNER JOIN users u
+		ON bo.id_user = u.id
 	</select>
 
 	<select id="findBorrowOrderById" parameterType="Long"
@@ -71,10 +71,8 @@
 		borrow_orders bo
 		INNER JOIN books b
 		ON bo.id_book = b.id
-		INNER JOIN users
-		u
-		ON
-		bo.id_user = u.id
+		INNER JOIN users u
+		ON bo.id_user = u.id
 		WHERE bo.id = #{id}
 	</select>
 
