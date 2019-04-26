@@ -51,7 +51,6 @@ public class UsersServiceImpl implements UsersDao {
 
   @Override
   public void updateUser(Users users) {
-    // users.setPassword(passwordEncoder.encode(users.getPassword()));
     userRepository.updateUser(users);
   }
 

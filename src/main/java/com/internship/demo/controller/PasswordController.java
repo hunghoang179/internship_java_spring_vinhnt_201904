@@ -46,8 +46,7 @@ public class PasswordController {
       user.setToken(UUID.randomUUID().toString());
       usersDao.updateUser(user);
 
-      String appUrl =
-          request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
+      String appUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
 
       // Email message
       SimpleMailMessage passwordResetEmail = new SimpleMailMessage();

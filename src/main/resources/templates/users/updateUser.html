@@ -67,9 +67,9 @@ footer {
 						<label class="control-label col-sm-3" for="pwd">Mail:</label>
 						<div class="col-sm-9">
 							<input type="email" class="form-control" name="mail" id="mail"
-								th:value="${user.getMail()}" placeholder="Mail"> <span
-								class="error" th:if="${errorMail != null}"
-								th:text="${errorMail}"></span>
+								th:value="${user.getMail()}" placeholder="Mail">
+							<!-- <span class="error" th:if="${#fields.hasErrors('mail')}" th:errors="${user.mail}"></span> -->
+							<span class="error" th:if="${errorMail != null}" th:text="${errorMail}"></span>
 						</div>
 					</div>
 					<div class="form-group">
@@ -84,10 +84,9 @@ footer {
 						<label class="control-label col-sm-3" for="pwd">Điện
 							thoại:</label>
 						<div class="col-sm-9">
-							<input type="text" class="form-control" name="phone" id="phone"
-								th:value="${user.getPhone()}" placeholder="Điện thoại">
-							<span class="error" th:if="${errorPhone != null}"
-								th:text="${errorPhone}"></span>
+							<input type="text" class="form-control" name="phone" id="phone" th:value="${user.getPhone()}" placeholder="Điện thoại">
+							<span class="error" th:if="${errorPhone != null}" th:text="${errorPhone}"></span>
+							<!-- <span class="error" th:if="${#fields.hasErrors('phone')}" th:errors="${user.phone}"></span> -->
 						</div>
 					</div>
 					<div class="form-group">
@@ -132,42 +131,7 @@ footer {
 					required : "Mail không được để trống",
 					email : "Mail không đúng định dạng"
 				}
-			},
-		/* submitHandler : function(form) {
-			var id = $("#dataUser").val();
-			var username = $("#username").val();
-			var phone = $("#phone").val();
-			var address = $("#address").val();
-			var password = $("#password").val();
-			var mail = $("#mail").val();
-			$
-					.ajax({
-						type : 'GET',
-						url : "/ajax/kiem-tra-user",
-						data : {
-							id : id,
-							username : username,
-							mail : mail,
-							phone : phone,
-							address : address,
-							password : password
-
-						},
-						success : function(result) {
-
-							if (result == "ok") {
-								window.location.href = "http://localhost:8080/home";
-							}
-
-							if (result == "false") {
-								$("#messageError")
-										.text(
-												"Tài khoản hoặc mail đã tồn tại");
-								$("#messageError").show();
-							}
-						}
-					});
-		} */
+			}
 		});
 	</script>
 </body>

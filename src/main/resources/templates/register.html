@@ -11,16 +11,20 @@
 <body>
 	<div class="login-page">
 		<div class="form">
-			<form method="POST" th:action="@{/user/register}" id="form-register">
-				<input type="text" name="username" id="username" placeholder="name" required="required" />
+			<form method="POST" th:action="@{/user/register}" th:object="${userRegister}" id="form-register">
 				<p class="error" th:if="${errorMessage != null}" th:text="${errorMessage}"></p>
-				<input type="password" name="password" id="password" placeholder="password" required="required" />
-				<input type="password" name="rePassword" id="rePassword" placeholder="confirm password" required="required" />
-				<p class="error" th:if="${errorPassword != null}" th:text="${errorPassword}"></p>
-				<input type="email" name="mail" id="mail" placeholder="email address" required="required" />
-				<p class="error" th:if="${errorMail != null}" th:text="${errorMail}"></p>
-				<input type="text" name="address" placeholder="address" required="required" /> 
-				<input type="number" name="phone" placeholder="phone" required="required" />
+				<input type="text" th:field="*{username}" placeholder="name"/>
+				<span class="error" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></span>
+				<input type="password" th:field="*{password}" placeholder="password"/>
+				<span class="error" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></span>
+				<input type="password" name="rePassword" id="rePassword" placeholder="confirm password"/>
+				<span class="error" th:if="${errorPassword != null}" th:text="${errorPassword}"></span>
+				<input type="email" th:field="*{mail}" placeholder="email address"/>
+				<span class="error" th:if="${#fields.hasErrors('mail')}" th:errors="*{mail}"></span>
+				<input type="text" th:field="*{address}" placeholder="address"/>
+				<span class="error" th:if="${#fields.hasErrors('address')}" th:errors="*{address}"></span>
+				<input type="text" th:field="*{phone}" placeholder="phone"/>
+				<span class="error" th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}"></span>
 				<p class="error" th:if="${errorPhone != null}" th:text="${errorPhone}"></p>
 				<button>create</button>
 				<p class="message">

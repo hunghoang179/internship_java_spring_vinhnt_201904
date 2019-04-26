@@ -5,6 +5,7 @@ import java.text.ParseException;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -76,7 +78,8 @@ public class HomeController {
   }
 
   @GetMapping(path = "/register")
-  public String redirectRigisterPage() {
+  public String redirectRigisterPage(Model model) {
+    model.addAttribute("userRegister", new Users());
     return "register";
   }
 
@@ -95,8 +98,13 @@ public class HomeController {
   }
 
   @PostMapping("/cap-nhat-thong-tin")
-  public String updateUser(@SessionAttribute UserModel user, @ModelAttribute Users users,
-      Model model) {
+  public String updateUser(@SessionAttribute UserModel user, @ModelAttribute @Valid Users users,
+      BindingResult result, Model model) {
+    
+    if (result.hasErrors()) {
+      return "/users/updateUser";
+    }
+    
     users.setId(user.getId());
     List<Users> listUser = new UserRepository().checkUpdateUser(users);
     if (!listUser.isEmpty()) {

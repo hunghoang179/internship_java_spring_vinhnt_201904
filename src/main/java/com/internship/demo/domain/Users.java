@@ -1,15 +1,30 @@
 package com.internship.demo.domain;
 
 import java.sql.Timestamp;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import com.internship.demo.custom.annotation.Phone;
 
 public class Users {
 
   private int id;
+
+  @NotBlank(message = "Tên đăng nhập không được để trống validate form")
   private String username;
+
+  @NotBlank(message = "Mật khẩu không được để trống")
   private String password;
+
+  @NotBlank(message = "Mail không được để trống")
+  @Email(message = "Mail không đúng định dạng")
   private String mail;
+
+  @NotBlank(message = "Địa chỉ không được để trống")
   private String address;
+
+  @Phone(message = "Điện thoại không đúng")
   private String phone;
+  
   private int role;
   private String createUser;
   private String updateUser;
