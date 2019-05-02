@@ -1,16 +1,30 @@
 package com.internship.demo.domain;
 
 import java.sql.Timestamp;
+import javax.validation.constraints.NotBlank;
 
 public class Book {
 
   private Long id;
+  
+  @NotBlank
   private String idCategory;
+  
+  @NotBlank
   private String title;
+  
+  @NotBlank
   private String contentShort;
+  
+  @NotBlank
   private Integer stock;
+  
   private Integer outStock;
+  
+  @NotBlank
   private String author;
+  
+  @NotBlank
   private String year;
   private String createUser;
   private String updateUser;

@@ -61,15 +61,21 @@ footer {
 							<input type="text" class="form-control" name="username"
 								id="username" th:value="${user.getUsername()}"
 								readonly="readonly" placeholder="Tài khoản">
+								<input type="hidden" class="form-control" name="password"
+								id="password" th:value="${user.getPassword()}"
+								readonly="readonly">
 						</div>
 					</div>
 					<div class="form-group">
 						<label class="control-label col-sm-3" for="pwd">Mail:</label>
 						<div class="col-sm-9">
 							<input type="email" class="form-control" name="mail" id="mail"
-								th:value="${user.getMail()}" placeholder="Mail">
-							<!-- <span class="error" th:if="${#fields.hasErrors('mail')}" th:errors="${user.mail}"></span> -->
-							<span class="error" th:if="${errorMail != null}" th:text="${errorMail}"></span>
+								th:value="${user.getMail()}" placeholder="Mail"> <span
+								class="error" th:if="${#fields.hasErrors('user.mail')}"
+								th:errors="${user.mail}"></span>
+							<!-- <span class="error" th:if="${#fields.hasErrors('mail')}" th:errors="*{username}"></span> -->
+							<span class="error" th:if="${errorMail != null}"
+								th:text="${errorMail}"></span>
 						</div>
 					</div>
 					<div class="form-group">
@@ -77,16 +83,20 @@ footer {
 						<div class="col-sm-9">
 							<input type="text" class="form-control" name="address"
 								id="address" th:value="${user.getAddress()}"
-								placeholder="Địa chỉ">
+								placeholder="Địa chỉ"> <span class="error"
+								th:if="${#fields.hasErrors('user.address')}"
+								th:errors="${user.address}"></span>
 						</div>
 					</div>
 					<div class="form-group">
 						<label class="control-label col-sm-3" for="pwd">Điện
 							thoại:</label>
 						<div class="col-sm-9">
-							<input type="text" class="form-control" name="phone" id="phone" th:value="${user.getPhone()}" placeholder="Điện thoại">
-							<span class="error" th:if="${errorPhone != null}" th:text="${errorPhone}"></span>
-							<!-- <span class="error" th:if="${#fields.hasErrors('phone')}" th:errors="${user.phone}"></span> -->
+							<input type="text" class="form-control" name="phone" id="phone"
+								th:value="${user.getPhone()}" placeholder="Điện thoại">
+							<span class="error" th:if="${errorPhone != null}"
+								th:text="${errorPhone}"></span> <span class="error"
+								th:if="${#fields.hasErrors('user.phone')}" th:errors="${user.phone}"></span>
 						</div>
 					</div>
 					<div class="form-group">

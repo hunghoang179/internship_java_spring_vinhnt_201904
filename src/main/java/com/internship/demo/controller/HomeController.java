@@ -111,14 +111,7 @@ public class HomeController {
       model.addAttribute("errorMail", "Mail đã tồn tại");
       return "/users/updateUser";
     }
-    if (!StringUtils.validateEmail(users.getMail())) {
-      model.addAttribute("errorMail", "Mail không đúng định dạng");
-      return "/users/updateUser";
-    }
-    if (!StringUtils.isPhone(users.getPhone())) {
-      model.addAttribute("errorPhone", "Điện thoại không đúng");
-      return "/users/updateUser";
-    }
+   
     usersDao.updateUser(users);
     return "redirect:/home";
   }

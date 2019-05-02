@@ -9,22 +9,22 @@ public class Users {
 
   private int id;
 
-  @NotBlank(message = "Tên đăng nhập không được để trống validate form")
+  @NotBlank
   private String username;
 
-  @NotBlank(message = "Mật khẩu không được để trống")
+  @NotBlank
   private String password;
 
-  @NotBlank(message = "Mail không được để trống")
-  @Email(message = "Mail không đúng định dạng")
+  @NotBlank
+  @Email
   private String mail;
 
-  @NotBlank(message = "Địa chỉ không được để trống")
+  @NotBlank
   private String address;
 
-  @Phone(message = "Điện thoại không đúng")
+  @Phone
   private String phone;
-  
+
   private int role;
   private String createUser;
   private String updateUser;

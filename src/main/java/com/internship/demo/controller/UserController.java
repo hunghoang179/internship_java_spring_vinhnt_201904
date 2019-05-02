@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import com.internship.demo.dao.UsersDao;
 import com.internship.demo.domain.Users;
+import com.internship.demo.utils.MessageUltils;
 
 @Controller
 @RequestMapping(path = "/user")
@@ -29,13 +30,13 @@ public class UserController {
     }
 
     if (!users.getPassword().equals(rePassword)) {
-      model.addAttribute("errorPassword", "Mật khẩu xác nhận không đúng");
+      model.addAttribute("errorPassword", MessageUltils.ERROR_RE_PASSWORD);
       return "register";
     }
 
     int isValidUser = usersDao.insertUser(users);
-    if (isValidUser == 0) { 
-      model.addAttribute("errorMessage", "Tài khoản hoặc mail đã tồn tại");
+    if (isValidUser == 0) {
+      model.addAttribute("errorMessage", MessageUltils.ERROR_USER);
       return "register";
     }
     return "login";
