@@ -1,8 +1,8 @@
 package com.internship.demo.dao;
 
-import org.springframework.mail.SimpleMailMessage;
+import com.internship.demo.model.MailDto;
 
 public interface EmailDao {
 
-  void sendEmail(SimpleMailMessage email);
+  void sendEmail(MailDto email);
 }

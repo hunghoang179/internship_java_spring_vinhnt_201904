@@ -49,51 +49,53 @@ footer {
 			<div class="col-lg-3"></div>
 			<div class="col-lg-6">
 				<form class="form-horizontal" id="editUser" method="post"
-					th:action="@{/admin/thay-doi-thong-tin}">
-					<input type="hidden" name="id" th:value="${userById.getId()}">
+					th:object="${userById}" th:action="@{/admin/thay-doi-thong-tin}">
+					<input type="hidden" th:field="*{id}" />
 					<div class="form-group">
 						<label class="control-label col-sm-3" for="email">Tài
 							khoản:</label>
 
 						<div class="col-sm-9">
-							<input type="text" class="form-control" name="username"
-								id="username" th:value="${userById.getUsername()}"
-								readonly="readonly" placeholder="Tài khoản">
+							<input type="text" class="form-control" th:field="*{username}"
+								readonly="readonly" placeholder="Tài khoản"> <span
+								class="error" th:if="${#fields.hasErrors('username')}"
+								th:errors="*{username}"></span>
 						</div>
 					</div>
 					<div class="form-group">
 						<label class="control-label col-sm-3" for="email">Mật
 							khẩu:</label>
 						<div class="col-sm-9">
-							<input type="password" class="form-control" name="password"
-								th:value="${userById.getPassword()}" id="password"
-								placeholder="Mật khẩu">
+							<input type="password" class="form-control" th:field="*{password}"
+								placeholder="Mật khẩu"> <span class="error"
+								th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></span>
 						</div>
 					</div>
 					<div class="form-group">
 						<label class="control-label col-sm-3" for="pwd">Mail:</label>
 						<div class="col-sm-9">
-							<input type="text" class="form-control" name="mail" id="mail"
-								readonly="readonly" th:value="${userById.getMail()}"
-								placeholder="Mail">
+							<input type="text" class="form-control" th:field="*{mail}"
+								readonly placeholder="Mail"> <span class="error"
+								th:if="${#fields.hasErrors('mail')}" th:errors="*{mail}"></span>
 						</div>
 					</div>
 					<div class="form-group">
 						<label class="control-label col-sm-3" for="pwd">Địa chỉ:</label>
 						<div class="col-sm-9">
-							<input type="text" class="form-control" name="address"
-								id="address" th:value="${userById.getAddress()}"
-								placeholder="Địa chỉ">
+							<input type="text" class="form-control" th:field="*{address}"
+								placeholder="Địa chỉ"> <span class="error"
+								th:if="${#fields.hasErrors('address')}" th:errors="*{address}"></span>
 						</div>
 					</div>
 					<div class="form-group">
 						<label class="control-label col-sm-3" for="pwd">Điện
 							thoại:</label>
 						<div class="col-sm-9">
-							<input type="text" class="form-control" name="phone" id="phone"
-								th:value="${userById.getPhone()}" placeholder="Điện thoại">
-							<span style="color: red;" th:if="${errorPhone != null}"
-								th:text="${errorPhone}"></span>
+							<input type="text" class="form-control" th:field="*{phone}"
+								placeholder="Điện thoại"> <span style="color: red;"
+								th:if="${errorPhone != null}" th:text="${errorPhone}"></span> <span
+								class="error" th:if="${#fields.hasErrors('phone')}"
+								th:errors="*{phone}"></span>
 						</div>
 					</div>
 					<div class="form-group" th:if="${not #lists.isEmpty(listRole)}">
@@ -135,7 +137,7 @@ footer {
 
 	<div th:replace="layout :: footer"></div>
 
-	<script>
+	<!-- <script>
 		$("#editUser").validate({
 			rules : {
 				password : "required",
@@ -154,6 +156,6 @@ footer {
 				}
 			}
 		});
-	</script>
+	</script> -->
 </body>
 </html>

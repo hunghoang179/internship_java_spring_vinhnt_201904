@@ -31,6 +31,7 @@ import com.internship.demo.domain.Users;
 import com.internship.demo.model.PasswordDto;
 import com.internship.demo.model.UserModel;
 import com.internship.demo.model.mapper.repository.UserRepository;
+import com.internship.demo.utils.MessageUltils;
 import com.internship.demo.utils.StringUtils;
 
 @Controller
@@ -108,7 +109,7 @@ public class HomeController {
     users.setId(user.getId());
     List<Users> listUser = new UserRepository().checkUpdateUser(users);
     if (!listUser.isEmpty()) {
-      model.addAttribute("errorMail", "Mail đã tồn tại");
+      model.addAttribute("errorMail", MessageUltils.MAIL_INVALID);
       return "/users/updateUser";
     }
    
@@ -126,7 +127,7 @@ public class HomeController {
       @ModelAttribute PasswordDto passwordDto, Model model) throws ParseException {
     Users users = usersDao.findUserById(user.getId());
     if (!passwordEncoder.matches(passwordDto.getPassword(), users.getPassword())) {
-      model.addAttribute("error", "Mật khẩu hiện tại không đúng");
+      model.addAttribute("error", MessageUltils.PASSWORD_NOT_VALID);
       return "/users/changePassword";
     }
     if (!passwordEncoder.matches(passwordDto.getPasswordNew(), users.getPassword())) {

@@ -1,11 +1,14 @@
 package com.internship.demo.domain;
 
 import java.sql.Timestamp;
+import javax.validation.constraints.NotBlank;
 
 public class Category {
 
   private Long id;
   private Long idParent;
+  
+  @NotBlank
   private String name;
   private String createUser;
   private String updateUser;

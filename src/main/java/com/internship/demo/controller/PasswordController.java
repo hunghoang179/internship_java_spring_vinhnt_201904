@@ -1,10 +1,12 @@
 package com.internship.demo.controller;
 
+import java.text.ParseException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,6 +18,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.internship.demo.dao.EmailDao;
 import com.internship.demo.dao.UsersDao;
 import com.internship.demo.domain.Users;
+import com.internship.demo.model.MailDto;
+import com.internship.demo.utils.MessageUltils;
+import com.internship.demo.utils.StringUtils;
 
 @Controller
 @RequestMapping("/forgot")
@@ -37,7 +42,7 @@ public class PasswordController {
 
   @PostMapping
   public String processForgotPasswordForm(Model model, @RequestParam("mail") String mail,
-      HttpServletRequest request) {
+      HttpServletRequest request) throws ParseException {
 
     Optional<Users> optional = usersDao.findUserByMail(mail);
 
@@ -46,17 +51,22 @@ public class PasswordController {
       user.setToken(UUID.randomUUID().toString());
       usersDao.updateUser(user);
 
-      String appUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
+      String appUrl =
+          request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
 
-      // Email message
-      SimpleMailMessage passwordResetEmail = new SimpleMailMessage();
-      passwordResetEmail.setFrom("adminsystem@gmail.com");
-      passwordResetEmail.setTo(user.getMail());
-      passwordResetEmail.setSubject("Password Reset Request");
-      passwordResetEmail.setText("Quên mật khẩu, click vào linh để đặt lại mật khẩu của bạn:\n"
-          + appUrl + "/forgot/reset?token=" + user.getToken());
+      MailDto mailDto = new MailDto();
+      mailDto.setMailFrom("admin@gmail.com");
+      mailDto.setMailTo(mail);
+      mailDto.setMailSubject("Reset Password");
 
-      emailDao.sendEmail(passwordResetEmail);
+      Map<String, Object> modelMap = new HashMap<String, Object>();
+      modelMap.put("name", user.getUsername());
+      modelMap.put("create", StringUtils.getTimestampNow());
+      modelMap.put("location", "Admin");
+      modelMap.put("signature", appUrl + "/forgot/reset?token=" + user.getToken());
+      mailDto.setModel(modelMap);
+
+      emailDao.sendEmail(mailDto);
     }
 
     model.addAttribute("successMessage", "Link đặt lại mật khẩu đã được gửi tới email " + mail);
@@ -88,12 +98,12 @@ public class PasswordController {
     Optional<Users> user = usersDao.findUserByToken(token);
 
     if (!passwordNew.equals(rePassword)) {
-      model.addAttribute("errorMessage", "Mật khẩu xác nhận không đúng");
+      model.addAttribute("errorMessage", MessageUltils.ERROR_RE_PASSWORD);
       return "reset-password";
     }
 
     if (passwordNew == null || rePassword == null) {
-      model.addAttribute("errorMessage", "Mật khẩu không được để trống");
+      model.addAttribute("errorMessage", MessageUltils.ERROR_PASSWORD_EMPTY);
       return "reset-password";
     } else {
       if (user.isPresent()) {
@@ -111,7 +121,7 @@ public class PasswordController {
         return "redirect:/login";
 
       } else {
-        model.addAttribute("errorMessage", "Xảy ra lỗi");
+        model.addAttribute("errorMessage", MessageUltils.ERROR);
       }
     }
     return "reset-password";

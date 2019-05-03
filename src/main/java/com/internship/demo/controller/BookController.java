@@ -24,6 +24,7 @@ import com.internship.demo.domain.BorrowOrder;
 import com.internship.demo.domain.Category;
 import com.internship.demo.model.BorrowBookDto;
 import com.internship.demo.model.UserModel;
+import com.internship.demo.utils.MessageUltils;
 import com.internship.demo.utils.StringUtils;
 
 @Controller
@@ -87,15 +88,16 @@ public class BookController {
   @GetMapping(path = "/the-loai-sach")
   public String redirectCategoryPage(Model model) {
     model.addAttribute("listCategory", categoryDao.getListCategory());
+    model.addAttribute("category", new Category());
     return "/category/category-list";
   }
 
   @PostMapping(path = "/admin/them-the-loai-sach")
   public String handleInsertCategory(@SessionAttribute UserModel user,
-      @ModelAttribute Category category, Model model) {
-    if (category.getName().equals("") || category.getName() == null) {
-      model.addAttribute("error", "Lỗi tên thể loại không được để trống");
-      return "/category/category-list";
+      @ModelAttribute @Valid Category category, BindingResult result, Model model) {
+    if (result.hasErrors()) {
+      //return "/category/category-list";
+      return "redirect:/book/the-loai-sach";
     }
     try {
       category.setCreateTime(StringUtils.getTimestampNow());
@@ -136,7 +138,7 @@ public class BookController {
       if (!isCheck) {
         categoryDao.deleteCategory(id);
       } else {
-        model.addAttribute("error", "Không thể xóa thể loại sách đang có sách");
+        model.addAttribute("error", MessageUltils.ERROR_DELETE_CATEGORY);
         model.addAttribute("listCategory", categoryDao.getListCategory());
         return "/category/category-list";
       }
@@ -148,13 +150,14 @@ public class BookController {
 
   @PostMapping(path = "/borrow")
   public String handleBorrowOrderBook(@SessionAttribute UserModel user,
-      @ModelAttribute @Valid BorrowOrder borrowOrder, BindingResult bindingResult, Model model,HttpServletRequest request) {
+      @ModelAttribute @Valid BorrowOrder borrowOrder, BindingResult bindingResult, Model model,
+      HttpServletRequest request) {
 
     List<Book> listBook = bookDao.getListBook();
     List<Category> listCategory = categoryDao.getListCategory();
 
     if (bindingResult.hasErrors()) {
-      model.addAttribute("error", "Lỗi ngày tháng mượn trả sách");
+      model.addAttribute("error", MessageUltils.DATE_ERROR);
       model.addAttribute("listBook", listBook);
       model.addAttribute("listCategory", listCategory);
       return "home";
@@ -162,37 +165,37 @@ public class BookController {
     if (borrowOrder.getBorrowDate() != null && borrowOrder.getReturnDate() != null) {
       if (StringUtils.daysBetween2Dates(borrowOrder.getBorrowDate(),
           borrowOrder.getReturnDate()) > 30) {
-        model.addAttribute("error", "Không được mượn sách quá 30 ngày");
+        model.addAttribute("error", MessageUltils.DATE_EXPIRED);
         model.addAttribute("listBook", listBook);
         model.addAttribute("listCategory", listCategory);
         return "home";
       }
     } else {
-      model.addAttribute("error", "Lỗi ngày tháng mượn trả sách");
+      model.addAttribute("error", MessageUltils.DATE_ERROR);
       model.addAttribute("listBook", listBook);
       model.addAttribute("listCategory", listCategory);
       return "home";
     }
     Long totalBookBorrow = borrowOrderDao.countBorrowOrderByUser((long) user.getId());
     if (user.getRole() == 0 && totalBookBorrow >= 5) {
-      model.addAttribute("error", "Bạn đã mượn số sách tối đa cho phép");
+      model.addAttribute("error", MessageUltils.BOOK_BORROW_LIMIT);
       model.addAttribute("listBook", listBook);
       model.addAttribute("listCategory", listCategory);
       return "home";
     } else if (user.getRole() == 1 && totalBookBorrow >= 10) {
-      model.addAttribute("error", "Bạn đã mượn số sách tối đa cho phép");
+      model.addAttribute("error", MessageUltils.BOOK_BORROW_LIMIT);
       model.addAttribute("listBook", listBook);
       model.addAttribute("listCategory", listCategory);
       return "home";
     } else if (user.getRole() == 1 && totalBookBorrow >= 15) {
-      model.addAttribute("error", "Bạn đã mượn số sách tối đa cho phép");
+      model.addAttribute("error", MessageUltils.BOOK_BORROW_LIMIT);
       model.addAttribute("listBook", listBook);
       model.addAttribute("listCategory", listCategory);
       return "home";
     }
     Book book = bookDao.findBookById(borrowOrder.getIdBook());
     if (book.getStock() <= book.getOutStock()) {
-      model.addAttribute("error", "Số lượng sách không đủ để mượn");
+      model.addAttribute("error", MessageUltils.BOOK_NOT_ENOUGHT);
       model.addAttribute("listBook", listBook);
       model.addAttribute("listCategory", listCategory);
       return "home";
@@ -242,7 +245,7 @@ public class BookController {
     BorrowOrder borrowOrder = borrowOrderDao.findBorrowOrderById(id);
     Book book = bookDao.findBookById(borrowOrder.getIdBook());
     if (book.getStock() <= book.getOutStock()) {
-      model.addAttribute("error", "Số lượng sách không đủ để mượn");
+      model.addAttribute("error", MessageUltils.BOOK_NOT_ENOUGHT);
       model.addAttribute("listBorrowOrder", listBorrowOrder);
       return "/borrow-order/borrow-order";
     }

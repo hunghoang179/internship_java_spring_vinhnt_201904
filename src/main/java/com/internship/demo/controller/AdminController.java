@@ -2,9 +2,11 @@ package com.internship.demo.controller;
 
 import java.text.ParseException;
 import java.util.List;
+import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -51,11 +53,9 @@ public class AdminController {
 
   @PostMapping(path = "/thay-doi-thong-tin")
   public String redirectEditUserPage(@SessionAttribute Users userById,
-      @SessionAttribute UserModel user, @ModelAttribute Users users, Model model)
-      throws ParseException {
-    if (!StringUtils.isPhone(users.getPhone())) {
-      model.addAttribute("errorPhone", "Điện thoại không đúng");
-      model.addAttribute("userById", userById);
+      @SessionAttribute UserModel user, @ModelAttribute("userById") @Valid Users users,
+      BindingResult result, Model model) throws ParseException {
+    if (result.hasErrors()) {
       return "/admin/edit-user";
     }
     users.setUpdateTime(StringUtils.getTimestampNow());
