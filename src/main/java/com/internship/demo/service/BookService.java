@@ -43,4 +43,9 @@ public class BookService implements BookDao {
     return bookRepository.getListBookPagination(recordStart, pageSize);
   }
 
+  @Override
+  public Long countTotalRecord() {
+    return bookRepository.countTotalRecord();
+  }
+
 }

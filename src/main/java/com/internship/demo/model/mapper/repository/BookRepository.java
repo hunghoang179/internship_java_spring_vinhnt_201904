@@ -49,5 +49,11 @@ public class BookRepository extends Repository<BookModelMapper> {
       return mapper.getListBookPagination(recordStart, pageSize);
     });
   }
+  
+  public Long countTotalRecord() {
+    return execute(mapper -> {
+      return mapper.countTotalRecord();
+    });
+  }
 
 }

@@ -17,6 +17,8 @@ import com.internship.demo.domain.Book;
 @RequestMapping(path = "/api")
 public class BookRestController {
 
+  private static final Long PAGE_SIZE = 3l;
+
   @Autowired
   BookDao bookDao;
 
@@ -28,10 +30,12 @@ public class BookRestController {
     }
     return new ResponseEntity<List<Book>>(list, HttpStatus.OK);
   }
-  
-  @GetMapping(path = "/book/pagination/{recordStart}/{pageSize}")
-  public ResponseEntity<List<Book>> getAllBookPagination(@PathVariable Long recordStart, @PathVariable Long pageSize) {
-    List<Book> list = bookDao.getListBookPagination(recordStart, pageSize);
+
+  @GetMapping(path = "/book/pagination/{pageNumber}")
+  public ResponseEntity<List<Book>> getAllBookPagination(@PathVariable Long pageNumber) {
+    //Long totalResult = bookDao.countTotalRecord();
+    Long itemStart = pageNumber * PAGE_SIZE - PAGE_SIZE;
+    List<Book> list = bookDao.getListBookPagination(itemStart, PAGE_SIZE);
     if (list.isEmpty() && list.size() <= 0) {
       return new ResponseEntity<List<Book>>(HttpStatus.NO_CONTENT);
     }
@@ -51,7 +55,7 @@ public class BookRestController {
   public ResponseEntity<Void> createBook(@RequestBody Book book) {
     System.out.println(book.getAuthor());
     bookDao.insertBook(book);
-    //HttpHeaders headers = new HttpHeaders();
+    // HttpHeaders headers = new HttpHeaders();
     // headers.setLocation(builder.path("/book/{id}").buildAndExpand(book.getId()).toUri());
     return new ResponseEntity<Void>(HttpStatus.CREATED);
   }

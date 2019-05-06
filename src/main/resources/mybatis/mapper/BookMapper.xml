@@ -19,12 +19,19 @@
 		*
 		FROM books
 	</select>
-	
-	<select id="getListBookPagination" resultMap="BookResultMap" parameterType='Long'>
+
+	<select id="getListBookPagination" resultMap="BookResultMap"
+		parameterType='Long'>
 		SELECT
 		*
 		FROM books
 		LIMIT #{recordStart},#{pageSize}
+	</select>
+
+	<select id="countTotalRecord" resultType="Long">
+		SELECT
+		COUNT(*)
+		FROM books
 	</select>
 
 	<select id="findBookById" parameterType="Long"
@@ -54,7 +61,8 @@
 
 	<update id='updateOutStockBook' parameterType='Book'>
 		UPDATE books b
-		SET b.stock = #{stock},
+		SET
+		b.stock = #{stock},
 		b.out_stock = #{outStock}
 		WHERE b.id = #{id};
 	</update>
