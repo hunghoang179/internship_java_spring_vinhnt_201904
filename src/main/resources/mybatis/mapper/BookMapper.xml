@@ -19,6 +19,13 @@
 		*
 		FROM books
 	</select>
+	
+	<select id="getListBookPagination" resultMap="BookResultMap" parameterType='Long'>
+		SELECT
+		*
+		FROM books
+		LIMIT #{recordStart},#{pageSize}
+	</select>
 
 	<select id="findBookById" parameterType="Long"
 		resultMap="BookResultMap">

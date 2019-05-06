@@ -38,4 +38,9 @@ public class BookService implements BookDao {
     bookRepository.updateOutStockBook(book);
   }
 
+  @Override
+  public List<Book> getListBookPagination(Long recordStart, Long pageSize) {
+    return bookRepository.getListBookPagination(recordStart, pageSize);
+  }
+
 }

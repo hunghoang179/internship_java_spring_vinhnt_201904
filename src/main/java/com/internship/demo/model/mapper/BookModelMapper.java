@@ -14,4 +14,7 @@ public interface BookModelMapper {
   void insertBook(Book book);
 
   void updateOutStockBook(Book book);
+  
+  
+  List<Book> getListBookPagination(Long recordStart, Long pageSize);
 }

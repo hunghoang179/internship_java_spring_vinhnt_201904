@@ -14,4 +14,6 @@ public interface BookDao {
   void insertBook(Book book);
 
   void updateOutStockBook(Book book);
+  
+  List<Book> getListBookPagination(Long recordStart, Long pageSize);
 }
