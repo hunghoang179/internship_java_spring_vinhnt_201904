@@ -3,6 +3,7 @@ package com.internship.demo.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -26,9 +27,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
   public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
     auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
   }
+  
+  
 
   @Override
   protected void configure(HttpSecurity http) throws Exception {
+    http.authorizeRequests().antMatchers(HttpMethod.POST, "/api/*");
+    http.authorizeRequests().antMatchers(HttpMethod.GET, "/api/*");
     http.authorizeRequests().antMatchers("/register").permitAll().antMatchers("/home")
         .hasAnyAuthority("USER", "ADMIN", "LIBRARIAN").antMatchers("/admin/*")
         .hasAnyAuthority("ADMIN", "LIBRARIAN").antMatchers("/book/admin/**")
