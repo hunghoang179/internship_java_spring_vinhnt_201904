@@ -33,7 +33,6 @@ public class BookRestController {
 
   @GetMapping(path = "/book/pagination/{pageNumber}")
   public ResponseEntity<List<Book>> getAllBookPagination(@PathVariable Long pageNumber) {
-    //Long totalResult = bookDao.countTotalRecord();
     Long itemStart = pageNumber * PAGE_SIZE - PAGE_SIZE;
     List<Book> list = bookDao.getListBookPagination(itemStart, PAGE_SIZE);
     if (list.isEmpty() && list.size() <= 0) {
@@ -55,8 +54,6 @@ public class BookRestController {
   public ResponseEntity<Void> createBook(@RequestBody Book book) {
     System.out.println(book.getAuthor());
     bookDao.insertBook(book);
-    // HttpHeaders headers = new HttpHeaders();
-    // headers.setLocation(builder.path("/book/{id}").buildAndExpand(book.getId()).toUri());
     return new ResponseEntity<Void>(HttpStatus.CREATED);
   }
 
