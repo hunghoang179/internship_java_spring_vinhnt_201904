@@ -1,62 +1,68 @@
-# internship_java_spring_vinhnt_201904
-Thực tập Java Spring Boot - Quản lý thư viện - VinhNT - 201904
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-## Môi trường phát triển
-- Java 8
-- Java Spring Boot + Thymeleaf + Mybatis
-- DB MYSQL 5.7 trở lên
+## Available Scripts
 
-## Nội dung
+In the project directory, you can run:
 
-### Login	
-	Nhập thông tin user/password để thực hiện đăng nhập
-	Password mã hóa MD5
-### Đăng ký user	
-	Cần validate các trường user là duy nhất, địa chỉ email phải hợp lệ, số điện thoại chỉ được nhập số
-### Lấy lại mật khẩu	
-	Tự động tạo mật khẩu mới rồi gửi mail thông tin mật khẩu
-### Thay đổi thông tin cá nhân	
-	Chỉ được thay đổi thông tin của cá nhân
-### Danh sách user	
-	Chỉ có thủ thư và admin có chức năng này
-### Sửa thông tin cá nhân	
-	Thủ thư có quyền đóng user, thay đổi thông tin số điện thoại, mật khẩu, địa chỉ của user thông thường, không được quyền thay đổi role của user
-	Admin có thể thay đổi thông tin số điện thoại, mật khẩu, địa chỉ, role của tất cả các user, có quyền đóng user
-	
-	
-### Danh sách thể loại sách	
-	Chỉ thủ thư và admin có quyền thực hiện
-### Thêm thể loại sách
-	Chỉ thủ thư và admin có quyền thực hiện
-### Sửa thể loại sách
-	Chỉ thủ thư và admin có quyền thực hiện
-### Xóa thể loại sách	
-	Chỉ thủ thư và admin có quyền thực hiện
-	Trường hợp thể loại sách đang có sách thì không được xóa
-	
-### Danh sách sách	
-	Tất cả mọi user đều có quyền
-### Thêm sách, sửa sách	
-	Chỉ thủ thư và admin có quyền thực hiện
-### Xem nội dung sách	
-	Tất cả mọi user đều có quyền
-	
-	
-### Danh sách mượn sách	
-	Với user thông thường và admin chỉ hiển thị danh sách của chính mình, với thủ thư hiển thị tất cả
-	
-### Mượn sách	
-	Tất cả mọi user đều có quyền mượn sách, tuy nhiên cần kiểm tra sách có còn trong thư viện hay không? 
-	Với mỗi một user thông thường chỉ được mượn 5 quyển, thủ thư 10 quyển, admin 15 quyển
-	Không được mượn 1 quyển sách quá 30 ngày với tất cả user
-	Trường hợp là user thủ thư mượn sách, trạng thái chuyển là đã duyệt và tăng thêm 1 số sách đã mượn , admin và user thông thường là pending và không tăng số sách đã mượn
-### Duyệt mượn sách	
-	Chỉ thủ thư có quyền duyệt sách, có thể thực hiện duyệt hoặc từ chối cho mượn sách, trường hợp duyệt, thì tăng thêm 1 số sách đã mượn.
-	Trước khi duyệt, cần kiểm tra số lượng sách trong dữ liệu sách còn hay không?
-### Trả sách	
-	Chỉ thủ thư có quyền thao tác, khi trả sách cập nhật trạng thái và giảm đi 1 số sách đã mượn
-### Mất sách	
-	Chỉ thủ thư có quyền thao tác, khi báo mất sách cập nhật trạng thái và giảm đi 1 số sách đã mượn, giảm đi 1 số lượng sách
+### `npm start`
 
-## Tham khảo
-  Coding convention: Google Java Style Guide https://google.github.io/styleguide/javaguide.html
+Runs the app in the development mode.<br>
+Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+
+The page will reload if you make edits.<br>
+You will also see any lint errors in the console.
+
+### `npm test`
+
+Launches the test runner in the interactive watch mode.<br>
+See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+
+### `npm run build`
+
+Builds the app for production to the `build` folder.<br>
+It correctly bundles React in production mode and optimizes the build for the best performance.
+
+The build is minified and the filenames include the hashes.<br>
+Your app is ready to be deployed!
+
+See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+
+### `npm run eject`
+
+**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+
+If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+
+Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+
+You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+
+## Learn More
+
+You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+
+To learn React, check out the [React documentation](https://reactjs.org/).
+
+### Code Splitting
+
+This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
+
+### Analyzing the Bundle Size
+
+This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
+
+### Making a Progressive Web App
+
+This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
+
+### Advanced Configuration
+
+This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
+
+### Deployment
+
+This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
+
+### `npm run build` fails to minify
+
+This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
