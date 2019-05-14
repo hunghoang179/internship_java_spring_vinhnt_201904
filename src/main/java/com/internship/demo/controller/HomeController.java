@@ -64,7 +64,8 @@ public class HomeController {
     List<Category> listCategory = categoryDao.getListCategory();
     model.addAttribute("listBook", listBook);
     model.addAttribute("listCategory", listCategory);
-    return "home";
+    //return "home";
+    return "/client/home";
   }
 
   @GetMapping("/403")
