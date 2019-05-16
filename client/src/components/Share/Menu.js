@@ -1,9 +1,15 @@
 import React from 'react'
 import { Route, Link } from 'react-router-dom'
 
-export default function Menu() {
+export default function Menu(props) {
 
-    const menus = [
+    const menusNomalUser = [
+        { to: '/home', label: "Trang chủ" },
+        { to: '/borrow', label: "Mượn sách" },
+        { to: '/contact', label: "Liên hệ" }
+    ]
+
+    const menusAdminUser = [
         { to: '/home', label: "Trang chủ" },
         { to: '/user', label: "Người dùng" },
         { to: '/category', label: "Thể loại sách" },
@@ -41,19 +47,20 @@ export default function Menu() {
                         <button type="button" className="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
                             <span className="icon-bar" /> <span className="icon-bar" /> <span className="icon-bar" />
                         </button>
-                        <a className="navbar-brand" href="#">Logo</a>
+                        <Link to="/home" className="navbar-brand">Logo</Link>
                     </div>
                     <div className="collapse navbar-collapse" id="myNavbar">
                         <ul className="nav navbar-nav">
-                            {renderMenu(menus)}
+                            {(props.sessionUser.role === 0) ? renderMenu(menusNomalUser) : renderMenu(menusAdminUser)}
                         </ul>
                         <ul className="nav navbar-nav navbar-right">
-                            <li className="dropdown"><a className="dropdown-toggle" data-toggle="dropdown" href="#"><span /><span className="caret" /></a>
+                            {/* <li className="dropdown"><a className="dropdown-toggle" data-toggle="dropdown" href="#"><span /><span className="caret" /></a>
                                 <ul className="dropdown-menu">
                                     <li><a>Thay đổi mật khẩu</a></li>
                                     <li><a>Thay đổi thông tin</a></li>
                                     <li><a>Đăng xuất</a></li>
-                                </ul></li>
+                                </ul>
+                            </li> */}
                         </ul>
                     </div>
                 </div>

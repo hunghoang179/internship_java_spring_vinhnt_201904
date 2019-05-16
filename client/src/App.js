@@ -1,29 +1,35 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import './App.css';
-import { BrowserRouter as Router, Route, Link, NavLink, Switch } from 'react-router-dom'
-import BookComponent from './components/Book/BookComponent'
-import UserComponent from './components/User/UserComponent'
-import CategoryComponent from './components/Category/CategoryComponent'
+import { BrowserRouter as Router } from 'react-router-dom'
 import Menu from './components/Share/Menu'
-import routes from './routes'
+import Routes from './components/Share/Routes'
 
 function App() {
 
-  const DevideRequest = (routes) => {
-    var result = null;
-    if (routes.lenght > 0) {
-      result = routes.map((route, index) => {
-        <Route key={index} path={route.path} component={route.main} />
-      });
-    }
-    return <Switch>{result}</Switch>
-  }
+  const [sessionUser, setSessionUser] = useState({});
+
+  useEffect(() => {
+    fetch(`/api/session/user`)
+      .then(
+        function (response) {
+          if (response.status !== 200) {
+            console.log('Lỗi, mã lỗi ' + response.status);
+            return;
+          }
+          return response.json();
+        }
+      )
+      .then(responseJson => setSessionUser(responseJson))
+      .catch(err =>
+        console.log('Error :-S', err)
+      );
+  }, [])
 
   return (
     <div className="App">
       <Router>
-        <Menu />
-        {DevideRequest(routes)}
+        <Menu sessionUser={sessionUser} />
+        <Routes sessionUser={sessionUser} />
       </Router>
     </div>
   );

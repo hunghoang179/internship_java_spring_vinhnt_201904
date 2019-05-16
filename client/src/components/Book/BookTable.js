@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react'
+import { Link } from 'react-router-dom'
+import Role from "../Share/Role";
 
-export default function BookTable() {
+
+export default function BookTable(props) {
 
     const [books, setBooks] = useState([]);
 
@@ -14,27 +17,25 @@ export default function BookTable() {
                     }
                     return response.json();
                 }
-            ).then(responseJson => setBooks(responseJson))
-            .catch(err => {
+            )
+            .then(responseJson => setBooks(responseJson))
+            .catch(err =>
                 console.log('Error :-S', err)
-            });
+            );
     }, [])
 
     return (
-        <div className="col-md-10" >
-            <h2>Danh sách sách</h2>
-            <table className="table table-striped">
-                <thead>
-                    <tr>
-                        <th>Tiêu đề</th>
-                        <th>Tác giả</th>
-                        <th>Năm sáng tác</th>
-                        <th>Tác vụ</th>
-                    </tr>
-                </thead>
-                <ListItem books={books} />
-            </table>
-        </div>
+        <table className="table table-striped">
+            <thead>
+                <tr>
+                    <th>Tiêu đề</th>
+                    <th>Tác giả</th>
+                    <th>Năm sáng tác</th>
+                    <th>Tác vụ</th>
+                </tr>
+            </thead>
+            <ListItem books={books} />
+        </table>
     );
 }
 
@@ -49,7 +50,10 @@ const ListItem = (props) => {
                 <td>
                     <span><i className="far fa-eye ml-2 mr-1"></i></span>
                     <span><i className="fas fa-book-medical"></i></span>
-                    <span><i className="fas fa-edit"></i></span>
+                    {/* <Role sessionUser={props.sessionUser}>
+                        <Link to={`/book/${book.id}/edit`}><span><i className="fas fa-edit"></i></span></Link>
+                    </Role> */}
+                    <Link to={`/book/${book.id}/edit`}><span><i className="fas fa-edit"></i></span></Link>
                 </td>
             </tr>
         ))

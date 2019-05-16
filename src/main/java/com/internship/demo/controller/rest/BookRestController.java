@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.internship.demo.dao.BookDao;
 import com.internship.demo.domain.Book;
 
-//@CrossOrigin(origins = { "http://localhost:3000", "http://localhost:4200" })
+// @CrossOrigin(origins = { "http://localhost:3000", "http://localhost:4200" })
 @RestController
 @RequestMapping(path = "/api")
 public class BookRestController {
@@ -66,8 +66,12 @@ public class BookRestController {
       return new ResponseEntity<Book>(HttpStatus.NOT_FOUND);
     }
 
+    currentBook.setTitle(book.getTitle());
+    currentBook.setStock(book.getStock());
     currentBook.setContentShort(book.getContentShort());
     currentBook.setAuthor(book.getAuthor());
+    currentBook.setYear(book.getYear());
+    currentBook.setIdCategory(book.getIdCategory());
 
     bookDao.updateBook(currentBook);
     return new ResponseEntity<Book>(currentBook, HttpStatus.OK);
