@@ -1,11 +1,11 @@
 import React from 'react'
 import UserComponent from "../../components/User/UserComponent";
 
-function UserPage() {
+function UserPage(props) {
 
     return (
         <div>
-            <UserComponent />
+            <UserComponent sessionUser={props.sessionUser} />
         </div>
     );
 }

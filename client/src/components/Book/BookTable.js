@@ -34,7 +34,7 @@ export default function BookTable(props) {
                     <th>Tác vụ</th>
                 </tr>
             </thead>
-            <ListItem books={books} />
+            <ListItem books={books} sessionUser={props.sessionUser} />
         </table>
     );
 }
@@ -48,12 +48,11 @@ const ListItem = (props) => {
                 <td>{book.author}</td>
                 <td>{book.year}</td>
                 <td>
-                    <span><i className="far fa-eye ml-2 mr-1"></i></span>
+                    <Link to={`/book/${book.id}/view`}><span><i className="far fa-eye ml-2 mr-1"></i></span></Link>
                     <span><i className="fas fa-book-medical"></i></span>
-                    {/* <Role sessionUser={props.sessionUser}>
+                    <Role sessionUser={props.sessionUser} status={1}>
                         <Link to={`/book/${book.id}/edit`}><span><i className="fas fa-edit"></i></span></Link>
-                    </Role> */}
-                    <Link to={`/book/${book.id}/edit`}><span><i className="fas fa-edit"></i></span></Link>
+                    </Role>
                 </td>
             </tr>
         ))
