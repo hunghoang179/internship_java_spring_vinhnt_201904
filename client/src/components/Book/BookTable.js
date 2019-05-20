@@ -49,7 +49,7 @@ const ListItem = (props) => {
                 <td>{book.year}</td>
                 <td>
                     <Link to={`/book/${book.id}/view`}><span><i className="far fa-eye ml-2 mr-1"></i></span></Link>
-                    <span><i className="fas fa-book-medical"></i></span>
+                    <Link to={`/book/borrow/${book.id}`}><span><i className="fas fa-book-medical"></i></span></Link>
                     <Role sessionUser={props.sessionUser} status={1}>
                         <Link to={`/book/${book.id}/edit`}><span><i className="fas fa-edit"></i></span></Link>
                     </Role>

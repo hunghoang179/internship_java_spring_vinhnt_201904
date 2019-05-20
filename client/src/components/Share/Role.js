@@ -28,11 +28,20 @@ export default function Role(props) {
         }
     }
 
+    function roleLibrarian(params) {
+        if (params.role === 1) {
+            return <span>{props.children}</span>;
+        } else {
+            return null;
+        }
+    }
+
     return (
         <span>
             {(props.status === 1) ? rolePublic(props.sessionUser) : ''}
             {(props.status === 2) ? rolePrivate(props.sessionUser) : ''}
             {(props.status === 3) ? roleAdmin(props) : ''}
+            {(props.status === 4) ? roleLibrarian(props.sessionUser) : ''}
         </span>
     );
 }

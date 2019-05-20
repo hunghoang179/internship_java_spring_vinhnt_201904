@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, Redirect } from 'react-router-dom'
 import Role from "../Share/Role";
 
 
 export default function CategoryTable(props) {
 
     const [categories, setCategories] = useState([]);
+    const [error, setError] = useState(null);
 
     useEffect(() => {
         fetch('/api/categories')
@@ -24,22 +25,52 @@ export default function CategoryTable(props) {
             );
     }, [])
 
+    const onDelete = (id) => {
+        if (id) {
+            fetch(`/api/category/${id}`, {
+                method: 'DELETE'
+            }).then(response => {
+                if (response.status === 200) {
+                    setCategories(
+                        categories.filter(category => category.id !== id)
+                    )
+                }
+
+                if (response.status === 409) {
+                    setError("Thể loại sách không thể xóa do có sách");
+                    setTimeout(function () {
+                        setError(null);
+                    }, 3000);
+                }
+
+                if (response.status === 302) {
+                    setError("Có lỗi xảy ra");
+                }
+            });
+        }
+    }
+
     return (
-        <table className="table table-striped">
-            <thead>
-                <tr>
-                    <th>STT</th>
-                    <th>Tên thể loại</th>
-                    <th>Thao tác</th>
-                </tr>
-            </thead>
-            <ListItem categories={categories} sessionUser={props.sessionUser} />
-        </table>
+        <div>
+            <p>{error !== null ? error : ""}</p>
+            <table className="table table-striped">
+                <thead>
+                    <tr>
+                        <th>STT</th>
+                        <th>Tên thể loại</th>
+                        <th>Thao tác</th>
+                    </tr>
+                </thead>
+                <ListItem categories={categories} sessionUser={props.sessionUser} onDelete={onDelete} />
+            </table>
+        </div>
     );
 }
 
 const ListItem = (props) => {
+
     const categoriesData = props.categories
+
     if (categoriesData.length > 0) {
         const listCategory = categoriesData.map((category, index) => (
             <tr key={category.id}>
@@ -47,7 +78,7 @@ const ListItem = (props) => {
                 <td>{category.name}</td>
                 <td>
                     <Link to={`/category/${category.id}/edit`}><span><i className="fas fa-edit"></i></span></Link>
-                    <Link><span onClick={() => deleteCategory(category.id, props)}><i class="fas fa-trash-alt"></i></span></Link>
+                    <span onClick={() => props.onDelete(category.id)}><i className="fas fa-trash-alt"></i></span>
                 </td>
             </tr>
         ))
@@ -59,23 +90,23 @@ const ListItem = (props) => {
     }
 }
 
-function deleteCategory(id, props) {
-    var { history } = props
-    if (id) {
-        fetch(`/api/category/${id}`, {
-            method: 'DELETE'
-        }).then(response => {
-            if (response.status === 200) {
-                history.goBack();
-            }
+// function deleteCategory(id, props) {
+//     var { history } = props
+//     if (id) {
+//         fetch(`/api/category/${id}`, {
+//             method: 'DELETE'
+//         }).then(response => {
+//             if (response.status === 200) {
+//                 return <Redirect to="/category" />
+//             }
 
-            if (response.status === 409) {
-                alert("Thể loại sách không thể xóa do có sách");
-            }
+//             if (response.status === 409) {
+//                 alert("Thể loại sách không thể xóa do có sách");
+//             }
 
-            if (response.status === 302) {
-                alert("Có lỗi xảy ra");
-            }
-        });
-    }
-}
+//             if (response.status === 302) {
+//                 alert("Có lỗi xảy ra");
+//             }
+//         });
+//     }
+// }

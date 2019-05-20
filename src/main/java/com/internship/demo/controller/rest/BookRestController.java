@@ -1,17 +1,29 @@
 package com.internship.demo.controller.rest;
 
+import java.text.ParseException;
 import java.util.List;
+import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.SessionAttribute;
 import com.internship.demo.dao.BookDao;
+import com.internship.demo.dao.BorrowOrderDao;
 import com.internship.demo.domain.Book;
+import com.internship.demo.domain.BorrowOrder;
+import com.internship.demo.model.BorrowBookDto;
+import com.internship.demo.model.UserModel;
+import com.internship.demo.utils.MessageUltils;
+import com.internship.demo.utils.StringUtils;
 
 // @CrossOrigin(origins = { "http://localhost:3000", "http://localhost:4200" })
 @RestController
@@ -22,6 +34,9 @@ public class BookRestController {
 
   @Autowired
   BookDao bookDao;
+
+  @Autowired
+  BorrowOrderDao borrowOrderDao;
 
   @GetMapping(path = "/book")
   public ResponseEntity<List<Book>> getAllBook() {
@@ -75,5 +90,119 @@ public class BookRestController {
 
     bookDao.updateBook(currentBook);
     return new ResponseEntity<Book>(currentBook, HttpStatus.OK);
+  }
+
+  @RequestMapping(value = "/book/borrow", method = RequestMethod.POST)
+  public ResponseEntity<Void> borrowBook(@RequestBody BorrowOrder borrowOrder,
+      HttpServletRequest request) {
+    UserModel user = (UserModel) request.getSession().getAttribute("user");
+    if (borrowOrder.getBorrowDate() != null && borrowOrder.getReturnDate() != null) {
+      if (StringUtils.daysBetween2Dates(borrowOrder.getBorrowDate(),
+          borrowOrder.getReturnDate()) > 30) {
+        return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
+      }
+
+      if (borrowOrder.getBorrowDate().after(borrowOrder.getReturnDate())
+          || borrowOrder.getBorrowDate().equals(borrowOrder.getReturnDate())) {
+        return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
+      }
+    } else {
+      return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
+    }
+    Long totalBookBorrow = borrowOrderDao.countBorrowOrderByUser((long) user.getId());
+    if (user.getRole() == 0 && totalBookBorrow >= 5) {
+      return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+    } else if (user.getRole() == 1 && totalBookBorrow >= 10) {
+      return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+    } else if (user.getRole() == 1 && totalBookBorrow >= 15) {
+      return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+    }
+    Book book = bookDao.findBookById(borrowOrder.getIdBook());
+    if (book.getStock() <= book.getOutStock()) {
+      return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+    try {
+      borrowOrder.setIdUser((long) user.getId());
+      borrowOrder.setCreateTime(StringUtils.getTimestampNow());
+      borrowOrder.setCreateUser(user.getUsername());
+      borrowOrder.setUpdateTime(StringUtils.getTimestampNow());
+      borrowOrder.setUpdateUser(user.getUsername());
+      borrowOrder.setStatus(0);
+      if (user.getRole() == 1) {
+        borrowOrder.setStatus(1);
+        book.setOutStock(book.getOutStock() + 1);
+        bookDao.updateOutStockBook(book);
+      }
+      borrowOrderDao.insertBorrowOrder(borrowOrder);
+    } catch (Exception e) {
+      return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+    }
+    return new ResponseEntity<Void>(HttpStatus.CREATED);
+  }
+
+  @GetMapping(path = "/book/borrow/list")
+  public ResponseEntity<List<BorrowOrder>> redirectBorrowOrderPage(HttpServletRequest request) {
+    List<BorrowOrder> listBorrowOrder = null;
+    UserModel user = (UserModel) request.getSession().getAttribute("user");
+    if (user.getRole() == 1) {
+      listBorrowOrder = borrowOrderDao.getListBorrowOrder();
+    } else {
+      listBorrowOrder = borrowOrderDao.getListBorrowOrderByUser((long) user.getId());
+    }
+    return new ResponseEntity<List<BorrowOrder>>(listBorrowOrder, HttpStatus.OK);
+  }
+
+  @GetMapping(path = "/book/approve/{id}")
+  public ResponseEntity<BorrowBookDto> redirectApproveBorrowOrderPage(@PathVariable Long id) {
+    BorrowBookDto borrowOrder = borrowOrderDao.findBorrowOrderBookById(id);
+    if (borrowOrder == null) {
+      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+    return new ResponseEntity<BorrowBookDto>(borrowOrder, HttpStatus.OK);
+  }
+
+  @PostMapping(path = "/book/approve")
+  public ResponseEntity<Void> approveBorrowOrder(@RequestBody long id, HttpServletRequest request)
+      throws ParseException {
+    UserModel user = (UserModel) request.getSession().getAttribute("user");
+    BorrowOrder borrowOrder = borrowOrderDao.findBorrowOrderById(id);
+    Book book = bookDao.findBookById(borrowOrder.getIdBook());
+    if (book.getStock() <= book.getOutStock()) {
+      return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+    borrowOrder.setStatus(1);
+    borrowOrder.setUpdateUser(user.getUsername());
+    borrowOrder.setUpdateTime(StringUtils.getTimestampNow());
+    borrowOrderDao.updateStatusBorrowOrder(borrowOrder);
+    book.setOutStock(book.getOutStock() + 1);
+    bookDao.updateOutStockBook(book);
+    return new ResponseEntity<>(HttpStatus.OK);
+  }
+
+  @PostMapping(path = "/book/cancle")
+  public ResponseEntity<Void> cancleBorrowOrder(@RequestBody long id, HttpServletRequest request)
+      throws ParseException {
+    UserModel user = (UserModel) request.getSession().getAttribute("user");
+    BorrowOrder borrowOrder = borrowOrderDao.findBorrowOrderById(id);
+    borrowOrder.setStatus(2);
+    borrowOrder.setUpdateUser(user.getUsername());
+    borrowOrder.setUpdateTime(StringUtils.getTimestampNow());
+    borrowOrderDao.updateStatusBorrowOrder(borrowOrder);
+    return new ResponseEntity<>(HttpStatus.OK);
+  }
+
+  @PostMapping(path = "/book/return")
+  public ResponseEntity<Void> returnBorrowOrder(@RequestBody long id, HttpServletRequest request)
+      throws ParseException {
+    UserModel user = (UserModel) request.getSession().getAttribute("user");
+    BorrowOrder borrowOrder = borrowOrderDao.findBorrowOrderById(id);
+    borrowOrder.setStatus(3);
+    borrowOrder.setUpdateUser(user.getUsername());
+    borrowOrder.setUpdateTime(StringUtils.getTimestampNow());
+    borrowOrderDao.updateStatusBorrowOrder(borrowOrder);
+    Book book = bookDao.findBookById(borrowOrder.getIdBook());
+    book.setOutStock(book.getOutStock() - 1);
+    bookDao.updateOutStockBook(book);
+    return new ResponseEntity<>(HttpStatus.OK);
   }
 }
