@@ -205,4 +205,20 @@ public class BookRestController {
     bookDao.updateOutStockBook(book);
     return new ResponseEntity<>(HttpStatus.OK);
   }
+
+  @PostMapping(path = "/book/missing")
+  public ResponseEntity<Void> missingBorrowOrder(@RequestBody long id, HttpServletRequest request)
+      throws ParseException {
+    UserModel user = (UserModel) request.getSession().getAttribute("user");
+    BorrowOrder borrowOrder = borrowOrderDao.findBorrowOrderById(id);
+    borrowOrder.setStatus(4);
+    borrowOrder.setUpdateUser(user.getUsername());
+    borrowOrder.setUpdateTime(StringUtils.getTimestampNow());
+    borrowOrderDao.updateStatusBorrowOrder(borrowOrder);
+    Book book = bookDao.findBookById(borrowOrder.getIdBook());
+    book.setStock(book.getStock() - 1);
+    book.setOutStock(book.getOutStock() - 1);
+    bookDao.updateOutStockBook(book);
+    return new ResponseEntity<>(HttpStatus.OK);
+  }
 }

@@ -6,17 +6,22 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import com.internship.demo.dao.UsersDao;
-import com.internship.demo.domain.Book;
 import com.internship.demo.domain.Users;
+import com.internship.demo.model.PasswordDto;
 import com.internship.demo.model.UserModel;
+import com.internship.demo.model.mapper.repository.UserRepository;
 import com.internship.demo.utils.StringUtils;
 
 @RestController
@@ -26,6 +31,9 @@ public class UserRestController {
 
   @Autowired
   UsersDao usersDao;
+
+  @Autowired
+  PasswordEncoder passwordEncoder;
 
   @GetMapping(path = "/session/user")
   public ResponseEntity<UserModel> getSessionUser(HttpServletRequest request) {
@@ -68,5 +76,42 @@ public class UserRestController {
     usersDao.editUser(users);
 
     return new ResponseEntity<Users>(users, HttpStatus.OK);
+  }
+
+  @PostMapping("/change/password")
+  public <T> ResponseEntity<T> updatePassword(HttpServletRequest request,
+      @RequestBody PasswordDto passwordDto, Model model) throws ParseException {
+    UserModel sessionUser = (UserModel) request.getSession().getAttribute("user");
+    Users users = usersDao.findUserById(sessionUser.getId());
+    if (!passwordEncoder.matches(passwordDto.getPassword(), users.getPassword())) {
+      return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
+    }
+
+    if (!passwordDto.getPasswordNew().equals(passwordDto.getRePassword())) {
+      return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+
+    if (!passwordEncoder.matches(passwordDto.getPasswordNew(), users.getPassword())) {
+      users.setPassword(passwordEncoder.encode(passwordDto.getPasswordNew()));
+      users.setUpdateUser(users.getUsername());
+      users.setUpdateTime(StringUtils.getTimestampNow());
+      usersDao.changePasswordUser(users);
+    }
+    return new ResponseEntity<>(HttpStatus.OK);
+  }
+
+  @PostMapping("/change/infor")
+  public ResponseEntity<Void> updateUser(HttpServletRequest request, @RequestBody Users users,
+      BindingResult result, Model model) {
+
+    UserModel sessionUser = (UserModel) request.getSession().getAttribute("user");
+    users.setId(sessionUser.getId());
+    List<Users> listUser = new UserRepository().checkUpdateUser(users);
+    if (!listUser.isEmpty()) {
+      return new ResponseEntity<>(HttpStatus.CONFLICT);
+    }
+
+    usersDao.updateUser(users);
+    return new ResponseEntity<>(HttpStatus.OK);
   }
 }

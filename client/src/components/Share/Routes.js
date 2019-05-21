@@ -5,13 +5,15 @@ import UserPage from '../../pages/User/UserPage'
 import CategoryPage from '../../pages/Category/CategoryPage'
 import BorrowPage from '../../pages/Borrow/BorrowPage'
 
-import AddBook from "../Book/AddBook";
-import ViewBook from "../Book/ViewBook";
-import BorrowBook from "../Book/BorrowBook";
-import EditUser from "../User/EditUser";
-import EditCategory from "../Category/EditCategory";
-import AddCategory from "../Category/AddCategory";
-import BorrowApprove from "../BorrowBook/BorrowApprove";
+import AddBook from "../Book/AddBook"
+import ViewBook from "../Book/ViewBook"
+import BorrowBook from "../Book/BorrowBook"
+import EditUser from "../User/EditUser"
+import EditCategory from "../Category/EditCategory"
+import AddCategory from "../Category/AddCategory"
+import BorrowApprove from "../BorrowBook/BorrowApprove"
+import ChangePassword from "../User/ChangePassword"
+import ChangeInfor from "../User/ChangeInfor"
 
 export default function Routes(props) {
 
@@ -32,14 +34,15 @@ export default function Routes(props) {
         { path: '/book/:id/view', main: ({ match, history }) => <ViewBook match={match} history={history} /> },
         { path: '/book/borrow/:id', main: ({ match, history }) => <BorrowBook match={match} history={history} /> },
 
-        { path: '/contact', main: () => <HomePage /> },
+        { path: '/change/password', main: ({ history }) => <ChangePassword history={history} /> },
+        { path: '/change/infor', main: ({ history }) => <ChangeInfor history={history} sessionUser={props.sessionUser} /> },
         { path: '/contact', main: () => <HomePage /> },
     ];
 
     function DevideRequest(routes) {
         var listLink = null;
         listLink = routes.map((route, index) => {
-            return (<Route key={index} path={route.path} component={route.main} />)
+            return (<Route exact key={index} path={route.path} component={route.main} />)
         })
         return listLink;
     }

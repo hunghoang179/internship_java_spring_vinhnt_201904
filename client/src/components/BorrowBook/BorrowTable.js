@@ -1,18 +1,27 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, Fragment } from 'react'
 import { Link, Redirect } from 'react-router-dom'
 import Role from "../Share/Role";
 
 
 export default function BorrowTable(props) {
 
+    const pageLimit = 10;
+
+    const [offset, setOffset] = useState(0);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [currentData, setCurrentData] = useState([]);
     const [borrowBook, setBorrowBook] = useState([]);
 
     useEffect(() => {
+        getList();
+    }, [])
+
+
+    function getList(params) {
         fetch('/api/book/borrow/list')
             .then(
                 function (response) {
                     if (response.status !== 200) {
-                        console.log('Lỗi, mã lỗi ' + response.status);
                         return;
                     }
                     return response.json();
@@ -22,23 +31,40 @@ export default function BorrowTable(props) {
             .catch(err =>
                 console.log('Error :-S', err)
             );
-    }, [])
+    }
+
+    // const paginationPage = () => {
+    //     var list = "";
+    //     for (var idx = 1; idx < 5; idx++) {
+    //         list = <li className="page-item"><a className="page-link" href="#">1</a></li>;
+    //     }
+    //     console.log(list);
+    //     console.log("ok");
+    //     return list;
+    // }
 
     return (
-        <table className="table table-striped">
-            <thead>
-                <tr>
-                    <th>STT</th>
-                    <th>Tiêu đề sách</th>
-                    <th>Người mượn</th>
-                    <th>Ngày mượn</th>
-                    <th>Ngày trả</th>
-                    <th>Trạng thái</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <ListItem borrowBook={borrowBook} sessionUser={props.sessionUser} />
-        </table>
+        <Fragment>
+            <table className="table table-striped">
+                <thead>
+                    <tr>
+                        <th>STT</th>
+                        <th>Tiêu đề sách</th>
+                        <th>Người mượn</th>
+                        <th>Ngày mượn</th>
+                        <th>Ngày trả</th>
+                        <th>Trạng thái</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <ListItem borrowBook={borrowBook} sessionUser={props.sessionUser} getList={getList} />
+            </table>
+            <nav aria-label="Page navigation example">
+                <ul className="pagination">
+                    <li className="page-item"><a className="page-link" href="#">1</a></li>
+                </ul>
+            </nav>
+        </Fragment>
     );
 }
 
@@ -62,28 +88,44 @@ const ListItem = (props) => {
         if (params === 1) {
             return (
                 <span>
-                    <a><i className="fas fa-exchange-alt"></i></a>
-                    <a><i className="fas fa-times-circle"></i></a>
+                    <a onClick={() => returnBook(id)}><i className="fas fa-exchange-alt"></i></a>
+                    <a onClick={() => missingBook(id)}><i className="fas fa-times-circle"></i></a>
                 </span>
             );
         }
     }
 
-    // const returnBook = (id) => {
-    //     if (id) {
-    //         fetch('/api/book/return', {
-    //             method: 'POST',
-    //             body: JSON.stringify(id),
-    //             headers: {
-    //                 "Content-type": "application/json; charset=UTF-8"
-    //             }
-    //         }).then(response => {
-    //             if (response.status === 200) {
-    //                 return <Redirect to="/borrow" />
-    //             }
-    //         });
-    //     }
-    // }
+    const returnBook = function (id) {
+        if (id) {
+            fetch('/api/book/return', {
+                method: 'POST',
+                body: JSON.stringify(id),
+                headers: {
+                    "Content-type": "application/json; charset=UTF-8"
+                }
+            }).then(response => {
+                if (response.status === 200) {
+                    props.getList();
+                }
+            });
+        }
+    }
+
+    const missingBook = function (id) {
+        if (id) {
+            fetch('/api/book/missing', {
+                method: 'POST',
+                body: JSON.stringify(id),
+                headers: {
+                    "Content-type": "application/json; charset=UTF-8"
+                }
+            }).then(response => {
+                if (response.status === 200) {
+                    props.getList();
+                }
+            });
+        }
+    }
 
     if (borrowBookData.length > 0) {
         const listBorrowBook = borrowBookData.map((borrowBook, index) => (

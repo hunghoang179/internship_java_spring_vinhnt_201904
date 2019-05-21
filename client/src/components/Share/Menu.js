@@ -5,16 +5,14 @@ export default function Menu(props) {
 
     const menusNomalUser = [
         { to: '/home', label: "Trang chủ" },
-        { to: '/borrow', label: "Mượn sách" },
-        { to: '/contact', label: "Liên hệ" }
+        { to: '/borrow', label: "Mượn sách" }
     ]
 
     const menusAdminUser = [
         { to: '/home', label: "Trang chủ" },
         { to: '/user', label: "Người dùng" },
         { to: '/category', label: "Thể loại sách" },
-        { to: '/borrow', label: "Mượn sách" },
-        { to: '/contact', label: "Liên hệ" }
+        { to: '/borrow', label: "Mượn sách" }
     ]
 
     const CustomLink = ({ label, to }) => {
@@ -38,6 +36,20 @@ export default function Menu(props) {
         return listLink;
     }
 
+    // function logout() {
+    //     fetch('/api/logout')
+    //         .then(
+    //             function (response) {
+    //                 if (response.status === 200) {
+    //                     return;
+    //                 }
+    //             }
+    //         )
+    //         .catch(err =>
+    //             console.log('Error :-S', err)
+    //         );
+    // }
+
 
     return (
         <div>
@@ -54,13 +66,13 @@ export default function Menu(props) {
                             {(props.sessionUser.role === 0) ? renderMenu(menusNomalUser) : renderMenu(menusAdminUser)}
                         </ul>
                         <ul className="nav navbar-nav navbar-right">
-                            {/* <li className="dropdown"><a className="dropdown-toggle" data-toggle="dropdown" href="#"><span /><span className="caret" /></a>
+                            <li className="dropdown"><a className="dropdown-toggle" data-toggle="dropdown" href="#"><span /><span className="caret" /></a>
                                 <ul className="dropdown-menu">
-                                    <li><a>Thay đổi mật khẩu</a></li>
-                                    <li><a>Thay đổi thông tin</a></li>
-                                    <li><a>Đăng xuất</a></li>
+                                    <Link to="/change/password"><li>Thay đổi mật khẩu</li></Link>
+                                    <Link to="/change/infor"><li>Thay đổi thông tin</li></Link>
+                                    <li>Đăng xuất</li>
                                 </ul>
-                            </li> */}
+                            </li>
                         </ul>
                     </div>
                 </div>
