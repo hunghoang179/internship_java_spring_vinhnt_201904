@@ -57,4 +57,16 @@ public class BorrowOrderRepository extends Repository<BorrowOrderModelMapper> {
     });
   }
 
+  public List<BorrowOrder> getListBorrowBookPagination(Long recordStart, Long pageSize) {
+    return execute(mapper -> {
+      return mapper.getListBorrowBookPagination(recordStart, pageSize);
+    });
+  }
+
+  public List<BorrowOrder> getListBorowBookSeach(String keyword) {
+    return execute(mapper -> {
+      return mapper.getListBorowBookSeach(keyword);
+    });
+  }
+
 }

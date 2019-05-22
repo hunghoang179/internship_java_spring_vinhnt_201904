@@ -6,23 +6,19 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.SessionAttribute;
 import com.internship.demo.dao.BookDao;
 import com.internship.demo.dao.BorrowOrderDao;
 import com.internship.demo.domain.Book;
 import com.internship.demo.domain.BorrowOrder;
 import com.internship.demo.model.BorrowBookDto;
 import com.internship.demo.model.UserModel;
-import com.internship.demo.utils.MessageUltils;
 import com.internship.demo.utils.StringUtils;
 
 // @CrossOrigin(origins = { "http://localhost:3000", "http://localhost:4200" })
@@ -30,7 +26,7 @@ import com.internship.demo.utils.StringUtils;
 @RequestMapping(path = "/api")
 public class BookRestController {
 
-  private static final Long PAGE_SIZE = 3l;
+  private static final Long PAGE_SIZE = 15l;
 
   @Autowired
   BookDao bookDao;
@@ -51,6 +47,16 @@ public class BookRestController {
   public ResponseEntity<List<Book>> getAllBookPagination(@PathVariable Long pageNumber) {
     Long itemStart = pageNumber * PAGE_SIZE - PAGE_SIZE;
     List<Book> list = bookDao.getListBookPagination(itemStart, PAGE_SIZE);
+    if (list.isEmpty() && list.size() <= 0) {
+      return new ResponseEntity<List<Book>>(HttpStatus.NO_CONTENT);
+    }
+    return new ResponseEntity<List<Book>>(list, HttpStatus.OK);
+  }
+
+  @GetMapping(path = "/book/seach/{keyword}")
+  public ResponseEntity<List<Book>> getAllBookSeach(@PathVariable String keyword) {
+    // String keyword = '%' + key + '%';
+    List<Book> list = bookDao.getListBookSeach(keyword);
     if (list.isEmpty() && list.size() <= 0) {
       return new ResponseEntity<List<Book>>(HttpStatus.NO_CONTENT);
     }
@@ -140,6 +146,29 @@ public class BookRestController {
     return new ResponseEntity<Void>(HttpStatus.CREATED);
   }
 
+  @GetMapping(path = "/book/borrow/list/pagination/{pageNumber}")
+  public ResponseEntity<List<BorrowOrder>> redirectBorrowOrderPagePagination(
+      @PathVariable Long pageNumber, HttpServletRequest request) {
+    Long itemStart = pageNumber * PAGE_SIZE - PAGE_SIZE;
+    List<BorrowOrder> listBorrowOrder = null;
+    UserModel user = (UserModel) request.getSession().getAttribute("user");
+    if (user.getRole() == 1) {
+      listBorrowOrder = borrowOrderDao.getListBorrowBookPagination(itemStart, PAGE_SIZE);
+    } else {
+      listBorrowOrder = borrowOrderDao.getListBorrowOrderByUser((long) user.getId());
+    }
+    return new ResponseEntity<List<BorrowOrder>>(listBorrowOrder, HttpStatus.OK);
+  }
+
+  @GetMapping(path = "/book/borrow/list/pagination/totalPage")
+  public Long getTotalPage(HttpServletRequest request) {
+    Long totalPage = 0l;
+    List<BorrowOrder> listBorrowOrder = borrowOrderDao.getListBorrowOrder();
+    long totalRecord = listBorrowOrder.size();
+    totalPage = (long) Math.ceil(totalRecord / (PAGE_SIZE * 1.0));
+    return totalPage;
+  }
+
   @GetMapping(path = "/book/borrow/list")
   public ResponseEntity<List<BorrowOrder>> redirectBorrowOrderPage(HttpServletRequest request) {
     List<BorrowOrder> listBorrowOrder = null;
@@ -220,5 +249,15 @@ public class BookRestController {
     book.setOutStock(book.getOutStock() - 1);
     bookDao.updateOutStockBook(book);
     return new ResponseEntity<>(HttpStatus.OK);
+  }
+
+  @GetMapping(path = "/book/borrow/seach/{keyword}")
+  public ResponseEntity<List<BorrowOrder>> getAllBorrowBookSeach(@PathVariable String keyword) {
+    // String keyword = '%' + key + '%';
+    List<BorrowOrder> list = borrowOrderDao.getListBorowBookSeach(keyword);
+    if (list.isEmpty() && list.size() <= 0) {
+      return new ResponseEntity<List<BorrowOrder>>(HttpStatus.NO_CONTENT);
+    }
+    return new ResponseEntity<List<BorrowOrder>>(list, HttpStatus.OK);
   }
 }

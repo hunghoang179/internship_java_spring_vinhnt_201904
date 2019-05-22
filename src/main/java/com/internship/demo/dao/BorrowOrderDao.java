@@ -19,4 +19,8 @@ public interface BorrowOrderDao {
   BorrowOrder findBorrowOrderById(Long id);
 
   Long countBorrowOrderByUser(Long id);
+
+  List<BorrowOrder> getListBorrowBookPagination(Long recordStart, Long pageSize);
+
+  List<BorrowOrder> getListBorowBookSeach(String keyword);
 }

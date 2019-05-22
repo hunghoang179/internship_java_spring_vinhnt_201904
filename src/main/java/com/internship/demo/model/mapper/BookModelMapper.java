@@ -18,4 +18,6 @@ public interface BookModelMapper {
   List<Book> getListBookPagination(Long recordStart, Long pageSize);
 
   Long countTotalRecord();
+
+  List<Book> getListBookSeach(String keyword);
 }

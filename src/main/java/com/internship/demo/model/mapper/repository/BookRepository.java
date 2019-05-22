@@ -43,16 +43,22 @@ public class BookRepository extends Repository<BookModelMapper> {
       mapper.updateOutStockBook(book);
     });
   }
-  
+
   public List<Book> getListBookPagination(Long recordStart, Long pageSize) {
     return execute(mapper -> {
       return mapper.getListBookPagination(recordStart, pageSize);
     });
   }
-  
+
   public Long countTotalRecord() {
     return execute(mapper -> {
       return mapper.countTotalRecord();
+    });
+  }
+
+  public List<Book> getListBookSeach(String keyword) {
+    return execute(mapper -> {
+      return mapper.getListBookSeach(keyword);
     });
   }
 

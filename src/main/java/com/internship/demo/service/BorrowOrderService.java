@@ -49,4 +49,14 @@ public class BorrowOrderService implements BorrowOrderDao {
     return borrowOrderRepository.countBorrowOrderByUser(id);
   }
 
+  @Override
+  public List<BorrowOrder> getListBorrowBookPagination(Long recordStart, Long pageSize) {
+    return borrowOrderRepository.getListBorrowBookPagination(recordStart, pageSize);
+  }
+
+  @Override
+  public List<BorrowOrder> getListBorowBookSeach(String keyword) {
+    return borrowOrderRepository.getListBorowBookSeach(keyword);
+  }
+
 }

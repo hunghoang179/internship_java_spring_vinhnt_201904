@@ -28,10 +28,19 @@
 		LIMIT #{recordStart},#{pageSize}
 	</select>
 
+	<select id="getListBookSeach" resultMap="BookResultMap">
+		<bind name="pattern" value="_parameter + '%'" />
+		SELECT
+		*
+		FROM books b
+		WHERE b.title LIKE #{pattern}
+	</select>
+
 	<select id="countTotalRecord" resultType="Long">
 		SELECT
 		COUNT(*)
-		FROM books
+		FROM
+		books
 	</select>
 
 	<select id="findBookById" parameterType="Long"
@@ -52,9 +61,11 @@
 	<update id='updateBook' parameterType='Book'>
 		UPDATE books b
 		SET b.title
-		= #{title}, b.content_short = #{contentShort}, b.stock = #{stock},
+		= #{title},b.id_category=#{idCategory}, b.content_short =
+		#{contentShort}, b.stock = #{stock},
 		b.author =
-		#{author}, b.year = #{year}, b.update_user = #{updateUser},
+		#{author}, b.year =
+		#{year}, b.update_user = #{updateUser},
 		b.update_time = #{updateTime}
 		WHERE b.id = #{id};
 	</update>

@@ -77,7 +77,7 @@ export default function AddBook(props) {
                 }
             }).then(response => {
                 if (response.status === 200) {
-                    history.goBack();
+                    history.goBack();   
                 }
             });
         } else {

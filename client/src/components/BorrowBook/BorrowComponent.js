@@ -9,7 +9,6 @@ export default function BorrowComponent(props) {
         <div className="container">
             <div className="row">
                 <div className="col-md-10" >
-                    <h2>Danh sách mượn sách</h2>
                     <BorrowTable sessionUser={props.sessionUser} />
                 </div>
             </div>

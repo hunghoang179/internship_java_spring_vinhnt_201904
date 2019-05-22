@@ -26,6 +26,14 @@ export default function ViewBook(props) {
         }
     }, [props])
 
+    function BookStocking(params1, params2) {
+        var stock = params1 - params2;
+        if (stock > 0) {
+            return true;
+        }
+        return false;
+    }
+
     return (
         <div className="container">
             <div className="row">
@@ -58,6 +66,7 @@ export default function ViewBook(props) {
                         </div>
                     </div>
                     <div className="modal-footer">
+                        {BookStocking(book.stock, book.outStock) ? <Link to={`/book/borrow/${book.id}`} className="btn btn-primary">Mượn sách</Link> : ''}
                         <Link to='/home' className="btn btn-default">Đóng</Link>
                     </div>
                 </div>

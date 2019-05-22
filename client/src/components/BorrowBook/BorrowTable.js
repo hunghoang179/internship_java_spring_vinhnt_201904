@@ -5,20 +5,84 @@ import Role from "../Share/Role";
 
 export default function BorrowTable(props) {
 
-    const pageLimit = 10;
-
-    const [offset, setOffset] = useState(0);
-    const [currentPage, setCurrentPage] = useState(1);
-    const [currentData, setCurrentData] = useState([]);
     const [borrowBook, setBorrowBook] = useState([]);
+    const [pageNumber, setPageNumber] = useState(1);
+    const [pages, setPages] = useState(0);
+
+    const [keyword, setKeyword] = useState("")
+
+    // useEffect(() => {
+    //     getList();
+    // }, [])
 
     useEffect(() => {
-        getList();
-    }, [])
+        var arrySeach = [];
+        if (keyword !== "") {
+            fetch(`/api/book/borrow/seach/${keyword}`)
+                .then(
+                    function (response) {
+                        return response.json();
+                    }
+                )
+                .then(responseJson => {
+                    setBorrowBook(responseJson);
+                    setPages(0)
+                })
+                .catch(err =>
+                    console.log('Error :-S', err)
+                );
+        } else {
+            getListPagination(pageNumber);
+        }
+    }, [keyword])
 
+    useEffect(() => {
+        getListPagination(pageNumber);
+    }, [pageNumber])
+
+    useEffect(() => {
+        if (keyword === "") {
+            fetch('/api/book/borrow/list/pagination/totalPage')
+                .then(
+                    function (response) {
+                        return response.json();
+                    }
+                )
+                .then(responseJson => {
+                    setPages(responseJson)
+                })
+                .catch(err =>
+                    console.log('Error :-S', err)
+                );
+        }
+    }, [keyword])
+
+    function arrayPages() {
+        let arr = [];
+        for (let i = 1; i <= pages; i++) {
+            arr.push(i);
+        }
+        return arr;
+    }
 
     function getList(params) {
         fetch('/api/book/borrow/list')
+            .then(
+                function (response) {
+                    if (response.status !== 200) {
+                        return;
+                    }
+                    return response.json();
+                }
+            )
+            .then(responseJson => setBorrowBook(responseJson))
+            .catch(err =>
+                console.log('Error :-S', err)
+            );
+    }
+
+    function getListPagination(pageNumber) {
+        fetch(`/api/book/borrow/list/pagination/${pageNumber}`)
             .then(
                 function (response) {
                     if (response.status !== 200) {
@@ -45,6 +109,10 @@ export default function BorrowTable(props) {
 
     return (
         <Fragment>
+            <h2>Danh sách mượn sách</h2>
+            <div className="col-md-7"></div>
+            <div className="col-md-5">
+                <input className="form-control form-control-sm mr-3 w-75" type="text" placeholder="Search" value={keyword} onChange={e => setKeyword(e.target.value)} /></div>
             <table className="table table-striped">
                 <thead>
                     <tr>
@@ -57,11 +125,13 @@ export default function BorrowTable(props) {
                         <th></th>
                     </tr>
                 </thead>
-                <ListItem borrowBook={borrowBook} sessionUser={props.sessionUser} getList={getList} />
+                <ListItem borrowBook={borrowBook} sessionUser={props.sessionUser} getList={getList} getListPagination={getListPagination} pages={pages} />
             </table>
             <nav aria-label="Page navigation example">
                 <ul className="pagination">
-                    <li className="page-item"><a className="page-link" href="#">1</a></li>
+                    {pages !== 0 ? arrayPages().map(page =>
+                        <li className="page-item" className={page === pageNumber ? 'active' : ''} key={page}><a className="page-link" onClick={() => { setPageNumber(page) }}>{page}</a></li>
+                    ) : ""}
                 </ul>
             </nav>
         </Fragment>
@@ -105,7 +175,7 @@ const ListItem = (props) => {
                 }
             }).then(response => {
                 if (response.status === 200) {
-                    props.getList();
+                    props.getListPagination(props.pages);
                 }
             });
         }
@@ -121,7 +191,7 @@ const ListItem = (props) => {
                 }
             }).then(response => {
                 if (response.status === 200) {
-                    props.getList();
+                    props.getListPagination(props.pages);
                 }
             });
         }
