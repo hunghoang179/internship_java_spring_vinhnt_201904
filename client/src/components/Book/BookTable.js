@@ -7,63 +7,58 @@ export default function BookTable(props) {
 
     const [books, setBooks] = useState([]);
 
-    // useEffect(() => {
-    //     fetch('/api/book')
-    //         .then(
-    //             function (response) {
-    //                 if (response.status !== 200) {
-    //                     console.log('Lỗi, mã lỗi ' + response.status);
-    //                     return;
-    //                 }
-    //                 return response.json();
-    //             }
-    //         )
-    //         .then(responseJson => setBooks(responseJson))
-    //         .catch(err =>
-    //             console.log('Error :-S', err)
-    //         );
-    // }, [])
-
     useEffect(() => {
-        //var arrySeach = []
-        if (props.keyword !== "") {
-            // arrySeach = books.filter(book => {
-            //     return book.title.toLowerCase().search(props.keyword.toLowerCase()) > -1;
-            // })
-            // setBooks(arrySeach);
-            // console.log(props.keyword);
-            fetch(`/api/book/seach/${props.keyword}`)
-                .then(
-                    function (response) {
-                        if (response.status !== 200) {
-                            console.log('Lỗi, mã lỗi ' + response.status);
-                            setBooks([])
-                            return;
-                        }
-                        return response.json();
+        fetch('/api/book')
+            .then(
+                function (response) {
+                    if (response.status !== 200) {
+                        console.log('Lỗi, mã lỗi ' + response.status);
+                        return;
                     }
-                )
-                .then(responseJson => setBooks(responseJson))
-                .catch(err =>
-                    console.log('Error :-S', err)
-                );
-        } else {
-            fetch('/api/book')
-                .then(
-                    function (response) {
-                        if (response.status !== 200) {
-                            console.log('Lỗi, mã lỗi ' + response.status);
-                            return;
-                        }
-                        return response.json();
-                    }
-                )
-                .then(responseJson => setBooks(responseJson))
-                .catch(err =>
-                    console.log('Error :-S', err)
-                );
-        }
-    }, [props])
+                    return response.json();
+                }
+            )
+            .then(responseJson => setBooks(responseJson))
+            .catch(err =>
+                console.log('Error :-S', err)
+            );
+    }, [])
+
+    // useEffect(() => {
+    //     //var arrySeach = []
+    //     if (props.keyword !== "") {
+    //         fetch(`/api/book/seach/${props.keyword}`)
+    //             .then(
+    //                 function (response) {
+    //                     if (response.status !== 200) {
+    //                         console.log('Lỗi, mã lỗi ' + response.status);
+    //                         setBooks([])
+    //                         return;
+    //                     }
+    //                     return response.json();
+    //                 }
+    //             )
+    //             .then(responseJson => setBooks(responseJson))
+    //             .catch(err =>
+    //                 console.log('Error :-S', err)
+    //             );
+    //     } else {
+    //         fetch('/api/book')
+    //             .then(
+    //                 function (response) {
+    //                     if (response.status !== 200) {
+    //                         console.log('Lỗi, mã lỗi ' + response.status);
+    //                         return;
+    //                     }
+    //                     return response.json();
+    //                 }
+    //             )
+    //             .then(responseJson => setBooks(responseJson))
+    //             .catch(err =>
+    //                 console.log('Error :-S', err)
+    //             );
+    //     }
+    // }, [props])
 
     return (
         <table className="table table-striped">

@@ -97,16 +97,6 @@ export default function BorrowTable(props) {
             );
     }
 
-    // const paginationPage = () => {
-    //     var list = "";
-    //     for (var idx = 1; idx < 5; idx++) {
-    //         list = <li className="page-item"><a className="page-link" href="#">1</a></li>;
-    //     }
-    //     console.log(list);
-    //     console.log("ok");
-    //     return list;
-    // }
-
     return (
         <Fragment>
             <h2>Danh sách mượn sách</h2>

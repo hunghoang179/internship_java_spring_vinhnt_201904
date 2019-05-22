@@ -53,10 +53,20 @@ public class BookRestController {
     return new ResponseEntity<List<Book>>(list, HttpStatus.OK);
   }
 
-  @GetMapping(path = "/book/seach/{keyword}")
-  public ResponseEntity<List<Book>> getAllBookSeach(@PathVariable String keyword) {
-    // String keyword = '%' + key + '%';
-    List<Book> list = bookDao.getListBookSeach(keyword);
+  // @GetMapping(path = "/book/seach/{keyword}")
+  // public ResponseEntity<List<Book>> getAllBookSeach(@PathVariable String keyword) {
+  // // String keyword = '%' + key + '%';
+  // List<Book> list = bookDao.getListBookSeach(keyword);
+  // if (list.isEmpty() && list.size() <= 0) {
+  // return new ResponseEntity<List<Book>>(HttpStatus.NO_CONTENT);
+  // }
+  // return new ResponseEntity<List<Book>>(list, HttpStatus.OK);
+  // }
+
+  @PostMapping(path = "/book/seach")
+  public ResponseEntity<List<Book>> getAllBookSeach(@RequestBody String title,
+      @RequestBody String author, @RequestBody String year) {
+    List<Book> list = bookDao.getListBookSeach(title, author, year);
     if (list.isEmpty() && list.size() <= 0) {
       return new ResponseEntity<List<Book>>(HttpStatus.NO_CONTENT);
     }

@@ -56,9 +56,15 @@ public class BookRepository extends Repository<BookModelMapper> {
     });
   }
 
-  public List<Book> getListBookSeach(String keyword) {
+  // public List<Book> getListBookSeach(String keyword) {
+  // return execute(mapper -> {
+  // return mapper.getListBookSeach(keyword);
+  // });
+  // }
+
+  public List<Book> getListBookSeach(String title, String author, String year) {
     return execute(mapper -> {
-      return mapper.getListBookSeach(keyword);
+      return mapper.getListBookSeach(title, author, year);
     });
   }
 

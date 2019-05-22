@@ -19,5 +19,6 @@ public interface BookModelMapper {
 
   Long countTotalRecord();
 
-  List<Book> getListBookSeach(String keyword);
+  /* List<Book> getListBookSeach(String keyword); */
+  List<Book> getListBookSeach(String title, String author, String year);
 }

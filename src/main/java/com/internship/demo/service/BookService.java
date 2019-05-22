@@ -48,9 +48,14 @@ public class BookService implements BookDao {
     return bookRepository.countTotalRecord();
   }
 
+  // @Override
+  // public List<Book> getListBookSeach(String keyword) {
+  // return bookRepository.getListBookSeach(keyword);
+  // }
+
   @Override
-  public List<Book> getListBookSeach(String keyword) {
-    return bookRepository.getListBookSeach(keyword);
+  public List<Book> getListBookSeach(String title, String author, String year) {
+    return bookRepository.getListBookSeach(title, author, year);
   }
 
 }
