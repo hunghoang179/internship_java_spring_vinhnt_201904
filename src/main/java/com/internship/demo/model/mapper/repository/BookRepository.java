@@ -3,6 +3,7 @@ package com.internship.demo.model.mapper.repository;
 import java.util.List;
 import org.apache.ibatis.session.SqlSession;
 import com.internship.demo.domain.Book;
+import com.internship.demo.form.BookSearchForm;
 import com.internship.demo.model.mapper.BookModelMapper;
 import com.internship.demo.mybaties.activemodel.Repository;
 
@@ -44,15 +45,24 @@ public class BookRepository extends Repository<BookModelMapper> {
     });
   }
 
-  public List<Book> getListBookPagination(Long recordStart, Long pageSize) {
+  public List<Book> getListBookPagination(BookSearchForm bookSearchForm, Long recordStart,
+      Long pageSize) {
     return execute(mapper -> {
-      return mapper.getListBookPagination(recordStart, pageSize);
+      return mapper.getListBookPagination(bookSearchForm.getTitle(), bookSearchForm.getAuthor(),
+          bookSearchForm.getYear(), recordStart, pageSize);
     });
   }
 
   public Long countTotalRecord() {
     return execute(mapper -> {
       return mapper.countTotalRecord();
+    });
+  }
+
+  public Long countTotalRecordBookSearch(BookSearchForm bookSearchForm) {
+    return execute(mapper -> {
+      return mapper.countTotalRecordBookSearch(bookSearchForm.getTitle(),
+          bookSearchForm.getAuthor(), bookSearchForm.getYear());
     });
   }
 

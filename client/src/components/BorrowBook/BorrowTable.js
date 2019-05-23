@@ -1,6 +1,7 @@
 import React, { useState, useEffect, Fragment } from 'react'
 import { Link, Redirect } from 'react-router-dom'
 import Role from "../Share/Role";
+import BorrowBookForm from './BorrowBookForm'
 
 
 export default function BorrowTable(props) {
@@ -9,53 +10,60 @@ export default function BorrowTable(props) {
     const [pageNumber, setPageNumber] = useState(1);
     const [pages, setPages] = useState(0);
 
-    const [keyword, setKeyword] = useState("")
-
-    // useEffect(() => {
-    //     getList();
-    // }, [])
+    const [title, setTitle] = useState("");
+    const [username, setUsername] = useState("");
+    const [status, setStatus] = useState("");
 
     useEffect(() => {
-        var arrySeach = [];
-        if (keyword !== "") {
-            fetch(`/api/book/borrow/seach/${keyword}`)
-                .then(
-                    function (response) {
-                        return response.json();
-                    }
-                )
-                .then(responseJson => {
-                    setBorrowBook(responseJson);
-                    setPages(0)
-                })
-                .catch(err =>
-                    console.log('Error :-S', err)
-                );
-        } else {
-            getListPagination(pageNumber);
-        }
-    }, [keyword])
-
-    useEffect(() => {
-        getListPagination(pageNumber);
+        getListPagination(title, username, status);
     }, [pageNumber])
 
     useEffect(() => {
-        if (keyword === "") {
-            fetch('/api/book/borrow/list/pagination/totalPage')
-                .then(
-                    function (response) {
-                        return response.json();
+        getTotalPage(title, username, status);
+    }, [])
+
+    function getListPagination(title, username, status) {
+        fetch(`/api/book/borrow/list/pagination/${pageNumber}`, {
+            method: 'POST',
+            body: JSON.stringify({ title: title, username: username, status: status }),
+            headers: {
+                "Content-type": "application/json; charset=UTF-8"
+            }
+        })
+            .then(
+                function (response) {
+                    if (response.status !== 200) {
+                        return;
                     }
-                )
-                .then(responseJson => {
-                    setPages(responseJson)
-                })
-                .catch(err =>
-                    console.log('Error :-S', err)
-                );
-        }
-    }, [keyword])
+                    return response.json();
+                }
+            )
+            .then(responseJson => setBorrowBook(responseJson))
+            .catch(err =>
+                console.log('Error :-S', err)
+            );
+    }
+
+    function getTotalPage(title, username, status) {
+        fetch('/api/book/borrow/list/pagination/totalPage', {
+            method: 'POST',
+            body: JSON.stringify({ title: title, username: username, status: status }),
+            headers: {
+                "Content-type": "application/json; charset=UTF-8"
+            }
+        })
+            .then(
+                function (response) {
+                    return response.json();
+                }
+            )
+            .then(responseJson => {
+                setPages(responseJson)
+            })
+            .catch(err =>
+                console.log('Error :-S', err)
+            );
+    }
 
     function arrayPages() {
         let arr = [];
@@ -65,44 +73,19 @@ export default function BorrowTable(props) {
         return arr;
     }
 
-    function getList(params) {
-        fetch('/api/book/borrow/list')
-            .then(
-                function (response) {
-                    if (response.status !== 200) {
-                        return;
-                    }
-                    return response.json();
-                }
-            )
-            .then(responseJson => setBorrowBook(responseJson))
-            .catch(err =>
-                console.log('Error :-S', err)
-            );
-    }
-
-    function getListPagination(pageNumber) {
-        fetch(`/api/book/borrow/list/pagination/${pageNumber}`)
-            .then(
-                function (response) {
-                    if (response.status !== 200) {
-                        return;
-                    }
-                    return response.json();
-                }
-            )
-            .then(responseJson => setBorrowBook(responseJson))
-            .catch(err =>
-                console.log('Error :-S', err)
-            );
+    const onSearch = (title, username, status) => {
+        setTitle(title);
+        setUsername(username);
+        setStatus(status);
+        setPageNumber(1);
+        getListPagination(title, username, status);
+        getTotalPage(title, username, status);
     }
 
     return (
         <Fragment>
             <h2>Danh sách mượn sách</h2>
-            <div className="col-md-7"></div>
-            <div className="col-md-5">
-                <input className="form-control form-control-sm mr-3 w-75" type="text" placeholder="Search" value={keyword} onChange={e => setKeyword(e.target.value)} /></div>
+            <BorrowBookForm onSearch={onSearch} />
             <table className="table table-striped">
                 <thead>
                     <tr>
@@ -115,7 +98,7 @@ export default function BorrowTable(props) {
                         <th></th>
                     </tr>
                 </thead>
-                <ListItem borrowBook={borrowBook} sessionUser={props.sessionUser} getList={getList} getListPagination={getListPagination} pages={pages} />
+                <ListItem borrowBook={borrowBook} sessionUser={props.sessionUser} getListPagination={getListPagination} pages={pages} />
             </table>
             <nav aria-label="Page navigation example">
                 <ul className="pagination">

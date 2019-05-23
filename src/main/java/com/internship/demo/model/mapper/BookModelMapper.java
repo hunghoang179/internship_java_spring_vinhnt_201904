@@ -15,9 +15,11 @@ public interface BookModelMapper {
 
   void updateOutStockBook(Book book);
 
-  List<Book> getListBookPagination(Long recordStart, Long pageSize);
+  List<Book> getListBookPagination(String title, String author, String year, Long recordStart, Long pageSize);
 
   Long countTotalRecord();
+  
+  Long countTotalRecordBookSearch(String title, String author, String year);
 
   /* List<Book> getListBookSeach(String keyword); */
   List<Book> getListBookSeach(String title, String author, String year);

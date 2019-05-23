@@ -34,7 +34,7 @@ export default function BookForm(props) {
                 <Role sessionUser={props.sessionUser} status={1}>
                     <Link to='/book/add' className="btn btn-primary">Thêm mới sách</Link>
                 </Role>
-                <Link to='/home' className="btn btn-default">Tìm kiếm</Link>
+                <button onClick={() => props.onSearch(title.trim(), author.trim(), year.trim())} className="btn btn-default">Tìm kiếm</button>
             </div>
         </div>
     );

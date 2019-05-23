@@ -19,6 +19,7 @@
         <typeAlias alias="Category" type="com.internship.demo.domain.Category" />
         <typeAlias alias="BorrowOrder" type="com.internship.demo.domain.BorrowOrder" />
         <typeAlias alias="BorrowBookDto" type="com.internship.demo.model.BorrowBookDto" />
+        <typeAlias alias="BookSearchForm" type="com.internship.demo.form.BookSearchForm" />
     </typeAliases>
     <environments default="development">
     <environment id="development">

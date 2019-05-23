@@ -17,6 +17,8 @@ import com.internship.demo.dao.BookDao;
 import com.internship.demo.dao.BorrowOrderDao;
 import com.internship.demo.domain.Book;
 import com.internship.demo.domain.BorrowOrder;
+import com.internship.demo.form.BookSearchForm;
+import com.internship.demo.form.BorrowBookSearchForm;
 import com.internship.demo.model.BorrowBookDto;
 import com.internship.demo.model.UserModel;
 import com.internship.demo.utils.StringUtils;
@@ -26,7 +28,7 @@ import com.internship.demo.utils.StringUtils;
 @RequestMapping(path = "/api")
 public class BookRestController {
 
-  private static final Long PAGE_SIZE = 15l;
+  private static final Long PAGE_SIZE = 10l;
 
   @Autowired
   BookDao bookDao;
@@ -43,34 +45,24 @@ public class BookRestController {
     return new ResponseEntity<List<Book>>(list, HttpStatus.OK);
   }
 
-  @GetMapping(path = "/book/pagination/{pageNumber}")
-  public ResponseEntity<List<Book>> getAllBookPagination(@PathVariable Long pageNumber) {
+  @PostMapping(path = "/book/pagination/{pageNumber}")
+  public ResponseEntity<List<Book>> getAllBookPagination(@RequestBody BookSearchForm bookSearchForm,
+      @PathVariable Long pageNumber) {
     Long itemStart = pageNumber * PAGE_SIZE - PAGE_SIZE;
-    List<Book> list = bookDao.getListBookPagination(itemStart, PAGE_SIZE);
+    List<Book> list = bookDao.getListBookPagination(bookSearchForm, itemStart, PAGE_SIZE);
     if (list.isEmpty() && list.size() <= 0) {
       return new ResponseEntity<List<Book>>(HttpStatus.NO_CONTENT);
     }
     return new ResponseEntity<List<Book>>(list, HttpStatus.OK);
   }
 
-  // @GetMapping(path = "/book/seach/{keyword}")
-  // public ResponseEntity<List<Book>> getAllBookSeach(@PathVariable String keyword) {
-  // // String keyword = '%' + key + '%';
-  // List<Book> list = bookDao.getListBookSeach(keyword);
-  // if (list.isEmpty() && list.size() <= 0) {
-  // return new ResponseEntity<List<Book>>(HttpStatus.NO_CONTENT);
-  // }
-  // return new ResponseEntity<List<Book>>(list, HttpStatus.OK);
-  // }
-
-  @PostMapping(path = "/book/seach")
-  public ResponseEntity<List<Book>> getAllBookSeach(@RequestBody String title,
-      @RequestBody String author, @RequestBody String year) {
-    List<Book> list = bookDao.getListBookSeach(title, author, year);
-    if (list.isEmpty() && list.size() <= 0) {
-      return new ResponseEntity<List<Book>>(HttpStatus.NO_CONTENT);
-    }
-    return new ResponseEntity<List<Book>>(list, HttpStatus.OK);
+  @PostMapping(path = "/book/list/pagination/totalPage")
+  public Long getTotalPageBook(@RequestBody BookSearchForm bookSearchForm,
+      HttpServletRequest request) {
+    Long totalPage = 0l;
+    long totalRecord = bookDao.countTotalRecordBookSearch(bookSearchForm);
+    totalPage = (long) Math.ceil(totalRecord / (PAGE_SIZE * 1.0));
+    return totalPage;
   }
 
   @GetMapping(path = "/book/{id}")
@@ -156,25 +148,26 @@ public class BookRestController {
     return new ResponseEntity<Void>(HttpStatus.CREATED);
   }
 
-  @GetMapping(path = "/book/borrow/list/pagination/{pageNumber}")
+  @PostMapping(path = "/book/borrow/list/pagination/{pageNumber}")
   public ResponseEntity<List<BorrowOrder>> redirectBorrowOrderPagePagination(
-      @PathVariable Long pageNumber, HttpServletRequest request) {
+      @RequestBody BorrowBookSearchForm borrowBookSearchForm, @PathVariable Long pageNumber,
+      HttpServletRequest request) {
     Long itemStart = pageNumber * PAGE_SIZE - PAGE_SIZE;
     List<BorrowOrder> listBorrowOrder = null;
     UserModel user = (UserModel) request.getSession().getAttribute("user");
     if (user.getRole() == 1) {
-      listBorrowOrder = borrowOrderDao.getListBorrowBookPagination(itemStart, PAGE_SIZE);
+      listBorrowOrder =
+          borrowOrderDao.getListBorrowBookPagination(borrowBookSearchForm, itemStart, PAGE_SIZE);
     } else {
       listBorrowOrder = borrowOrderDao.getListBorrowOrderByUser((long) user.getId());
     }
     return new ResponseEntity<List<BorrowOrder>>(listBorrowOrder, HttpStatus.OK);
   }
 
-  @GetMapping(path = "/book/borrow/list/pagination/totalPage")
-  public Long getTotalPage(HttpServletRequest request) {
+  @PostMapping(path = "/book/borrow/list/pagination/totalPage")
+  public Long getTotalPage(@RequestBody BorrowBookSearchForm borrowBookSearchForm) {
     Long totalPage = 0l;
-    List<BorrowOrder> listBorrowOrder = borrowOrderDao.getListBorrowOrder();
-    long totalRecord = listBorrowOrder.size();
+    long totalRecord = borrowOrderDao.countListBorrowBookPagination(borrowBookSearchForm);
     totalPage = (long) Math.ceil(totalRecord / (PAGE_SIZE * 1.0));
     return totalPage;
   }

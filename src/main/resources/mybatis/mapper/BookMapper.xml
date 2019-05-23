@@ -20,12 +20,37 @@
 		FROM books
 	</select>
 
-	<select id="getListBookPagination" resultMap="BookResultMap"
-		parameterType='Long'>
+	<select id="getListBookPagination" resultMap="BookResultMap">
 		SELECT
 		*
-		FROM books
+		FROM books b
+		WHERE b.is_deleted = 0
+		<if test='title != ""'>
+			AND b.title LIKE #{title}
+		</if>
+		<if test='author != ""'>
+			AND b.author LIKE #{author}
+		</if>
+		<if test='year != ""'>
+			AND b.year LIKE #{year}
+		</if>
 		LIMIT #{recordStart},#{pageSize}
+	</select>
+
+	<select id="countTotalRecordBookSearch" resultType="Long">
+		SELECT
+		COUNT(*)
+		FROM books b
+		WHERE b.is_deleted = 0
+		<if test='title != ""'>
+			AND b.title LIKE #{title}
+		</if>
+		<if test='author != ""'>
+			AND b.author LIKE #{author}
+		</if>
+		<if test='year != ""'>
+			AND b.year LIKE #{year}
+		</if>
 	</select>
 
 	<!-- <select id="getListBookSeach" resultMap="BookResultMap"> -->
@@ -40,14 +65,14 @@
 		SELECT
 		*
 		FROM books b
-		WHERE
-		<if test="title != null">
-			b.title LIKE #{title}
+		WHERE b.is_deleted = 0
+		<if test='title != ""'>
+			AND b.title LIKE #{title}
 		</if>
-		<if test="author != null">
+		<if test='author != ""'>
 			AND b.author LIKE #{author}
 		</if>
-		<if test="year != null">
+		<if test='year != ""'>
 			AND b.year LIKE #{year}
 		</if>
 	</select>

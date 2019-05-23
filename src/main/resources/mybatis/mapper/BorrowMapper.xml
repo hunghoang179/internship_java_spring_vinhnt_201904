@@ -65,12 +65,14 @@
 		SELECT bo.id,
 		bo.id_user,
 		bo.id_book, bo.borrow_date,
-		bo.return_date, bo.note,
+		bo.return_date,
+		bo.note,
 		bo.status,
 		b.title,
 		b.stock, b.out_stock,
 		u.user_name
-		FROM borrow_orders
+		FROM
+		borrow_orders
 		bo
 		INNER JOIN books
 		b
@@ -78,8 +80,42 @@
 		INNER JOIN users u
 		ON bo.id_user
 		= u.id
+		WHERE b.is_deleted = 0
+		<if test='title != ""'>
+			AND b.title LIKE #{title}
+		</if>
+		<if test='username != ""'>
+			AND u.user_name LIKE #{username}
+		</if>
+		<if test='status != ""'>
+			AND bo.status LIKE #{status}
+		</if>
 		LIMIT
 		#{recordStart},#{pageSize}
+	</select>
+
+	<select id="countListBorrowBookPagination" resultType="Long">
+		SELECT COUNT(*)
+		FROM
+		borrow_orders
+		bo
+		INNER JOIN books
+		b
+		ON bo.id_book =
+		b.id
+		INNER JOIN users u
+		ON bo.id_user
+		= u.id
+		WHERE b.is_deleted = 0
+		<if test='title != ""'>
+			AND b.title LIKE #{title}
+		</if>
+		<if test='username != ""'>
+			AND u.user_name LIKE #{username}
+		</if>
+		<if test='status != ""'>
+			AND bo.status LIKE #{status}
+		</if>
 	</select>
 
 	<select id="findBorrowOrderById" parameterType="Long"

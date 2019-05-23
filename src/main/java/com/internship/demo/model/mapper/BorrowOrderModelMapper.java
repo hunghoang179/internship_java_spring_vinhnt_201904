@@ -20,7 +20,10 @@ public interface BorrowOrderModelMapper {
 
   Long countBorrowOrderByUser(Long id);
 
-  List<BorrowOrder> getListBorrowBookPagination(Long recordStart, Long pageSize);
-  
+  List<BorrowOrder> getListBorrowBookPagination(String title, String username, String status,
+      Long recordStart, Long pageSize);
+
+  Long countListBorrowBookPagination(String title, String username, String status);
+
   List<BorrowOrder> getListBorowBookSeach(String keyword);
 }

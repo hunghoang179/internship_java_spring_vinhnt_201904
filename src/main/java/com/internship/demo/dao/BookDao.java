@@ -2,6 +2,7 @@ package com.internship.demo.dao;
 
 import java.util.List;
 import com.internship.demo.domain.Book;
+import com.internship.demo.form.BookSearchForm;
 
 public interface BookDao {
 
@@ -15,9 +16,11 @@ public interface BookDao {
 
   void updateOutStockBook(Book book);
 
-  List<Book> getListBookPagination(Long recordStart, Long pageSize);
+  List<Book> getListBookPagination(BookSearchForm bookSearchForm, Long recordStart, Long pageSize);
 
   Long countTotalRecord();
+
+  Long countTotalRecordBookSearch(BookSearchForm bookSearchForm);
 
   List<Book> getListBookSeach(String title, String author, String year);
 }

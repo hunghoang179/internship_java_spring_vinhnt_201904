@@ -2,6 +2,7 @@ package com.internship.demo.dao;
 
 import java.util.List;
 import com.internship.demo.domain.BorrowOrder;
+import com.internship.demo.form.BorrowBookSearchForm;
 import com.internship.demo.model.BorrowBookDto;
 
 public interface BorrowOrderDao {
@@ -20,7 +21,10 @@ public interface BorrowOrderDao {
 
   Long countBorrowOrderByUser(Long id);
 
-  List<BorrowOrder> getListBorrowBookPagination(Long recordStart, Long pageSize);
+  List<BorrowOrder> getListBorrowBookPagination(BorrowBookSearchForm borrowBookSearchForm,
+      Long recordStart, Long pageSize);
+
+  Long countListBorrowBookPagination(BorrowBookSearchForm borrowBookSearchForm);
 
   List<BorrowOrder> getListBorowBookSeach(String keyword);
 }

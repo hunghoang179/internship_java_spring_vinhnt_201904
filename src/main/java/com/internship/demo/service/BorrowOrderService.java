@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.internship.demo.dao.BorrowOrderDao;
 import com.internship.demo.domain.BorrowOrder;
+import com.internship.demo.form.BorrowBookSearchForm;
 import com.internship.demo.model.BorrowBookDto;
 import com.internship.demo.model.mapper.repository.BorrowOrderRepository;
 
@@ -50,13 +51,20 @@ public class BorrowOrderService implements BorrowOrderDao {
   }
 
   @Override
-  public List<BorrowOrder> getListBorrowBookPagination(Long recordStart, Long pageSize) {
-    return borrowOrderRepository.getListBorrowBookPagination(recordStart, pageSize);
+  public List<BorrowOrder> getListBorrowBookPagination(BorrowBookSearchForm borrowBookSearchForm,
+      Long recordStart, Long pageSize) {
+    return borrowOrderRepository.getListBorrowBookPagination(borrowBookSearchForm, recordStart,
+        pageSize);
   }
 
   @Override
   public List<BorrowOrder> getListBorowBookSeach(String keyword) {
     return borrowOrderRepository.getListBorowBookSeach(keyword);
+  }
+
+  @Override
+  public Long countListBorrowBookPagination(BorrowBookSearchForm borrowBookSearchForm) {
+    return borrowOrderRepository.countListBorrowBookPagination(borrowBookSearchForm);
   }
 
 }

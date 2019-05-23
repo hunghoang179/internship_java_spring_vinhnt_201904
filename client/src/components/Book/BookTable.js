@@ -1,77 +1,110 @@
 import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import Role from "../Share/Role";
+import BookForm from './BookForm'
 
 
 export default function BookTable(props) {
 
     const [books, setBooks] = useState([]);
+    const [pageNumber, setPageNumber] = useState(1);
+    const [pages, setPages] = useState(0);
+
+    const [title, setTitle] = useState("");
+    const [author, setAuthor] = useState("");
+    const [year, setYear] = useState("");
 
     useEffect(() => {
-        fetch('/api/book')
+        getBookData(title, author, year);
+    }, [pageNumber])
+
+    useEffect(() => {
+        getTotalPage(title, author, year)
+    }, [])
+
+    function getBookData(title, author, year) {
+        fetch(`/api/book/pagination/${pageNumber}`, {
+            method: 'POST',
+            body: JSON.stringify({ title: title, author: author, year: year }),
+            headers: {
+                "Content-type": "application/json; charset=UTF-8"
+            }
+        })
             .then(
                 function (response) {
-                    if (response.status !== 200) {
-                        console.log('Lỗi, mã lỗi ' + response.status);
-                        return;
+                    if (response !== 200) {
+                        setBooks([])
                     }
                     return response.json();
                 }
             )
-            .then(responseJson => setBooks(responseJson))
+            .then(responseJson => {
+                setBooks(responseJson)
+            })
             .catch(err =>
                 console.log('Error :-S', err)
             );
-    }, [])
+    }
 
-    // useEffect(() => {
-    //     //var arrySeach = []
-    //     if (props.keyword !== "") {
-    //         fetch(`/api/book/seach/${props.keyword}`)
-    //             .then(
-    //                 function (response) {
-    //                     if (response.status !== 200) {
-    //                         console.log('Lỗi, mã lỗi ' + response.status);
-    //                         setBooks([])
-    //                         return;
-    //                     }
-    //                     return response.json();
-    //                 }
-    //             )
-    //             .then(responseJson => setBooks(responseJson))
-    //             .catch(err =>
-    //                 console.log('Error :-S', err)
-    //             );
-    //     } else {
-    //         fetch('/api/book')
-    //             .then(
-    //                 function (response) {
-    //                     if (response.status !== 200) {
-    //                         console.log('Lỗi, mã lỗi ' + response.status);
-    //                         return;
-    //                     }
-    //                     return response.json();
-    //                 }
-    //             )
-    //             .then(responseJson => setBooks(responseJson))
-    //             .catch(err =>
-    //                 console.log('Error :-S', err)
-    //             );
-    //     }
-    // }, [props])
+    function getTotalPage(title, author, year) {
+        fetch("/api/book/list/pagination/totalPage", {
+            method: 'POST',
+            body: JSON.stringify({ title: title, author: author, year: year }),
+            headers: {
+                "Content-type": "application/json; charset=UTF-8"
+            }
+        })
+            .then(
+                function (response) {
+                    return response.json();
+                }
+            )
+            .then(responseJson => setPages(responseJson))
+            .catch(err =>
+                console.log('Error :-S', err)
+            );
+    }
+
+
+    const onSearch = (title, author, year) => {
+        setTitle(title);
+        setAuthor(author);
+        setYear(year);
+        setPageNumber(1);
+        getBookData(title, author, year);
+        getTotalPage(title, author, year);
+    }
+
+    function arrayPages(params) {
+        let arr = [];
+        for (let i = 1; i <= params; i++) {
+            arr.push(i);
+        }
+        return arr;
+    }
 
     return (
-        <table className="table table-striped">
-            <thead>
-                <tr>
-                    <th>Tiêu đề</th>
-                    <th>Tác giả</th>
-                    <th>Năm sáng tác</th>
-                    <th>Tác vụ</th>
-                </tr>
-            </thead>
-            <ListItem books={books} sessionUser={props.sessionUser} />
-        </table>
+        <React.Fragment>
+            <BookForm sessionUser={props.sessionUser} onSearch={onSearch} />
+            <table className="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Tiêu đề</th>
+                        <th>Tác giả</th>
+                        <th>Năm sáng tác</th>
+                        <th>Tác vụ</th>
+                    </tr>
+                </thead>
+                <ListItem books={books} sessionUser={props.sessionUser} />
+            </table>
+            <nav aria-label="Page navigation example">
+                <ul className="pagination">
+                    {pages > 1 ? arrayPages(pages).map(page =>
+                        <li className="page-item" className={page === pageNumber ? 'active' : ''} key={page}><a className="page-link" onClick={() => { setPageNumber(page) }}>{page}</a></li>
+                    ) : ""}
+                </ul>
+            </nav>
+        </React.Fragment>
     );
 }
 

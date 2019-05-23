@@ -3,6 +3,7 @@ package com.internship.demo.model.mapper.repository;
 import java.util.List;
 import org.apache.ibatis.session.SqlSession;
 import com.internship.demo.domain.BorrowOrder;
+import com.internship.demo.form.BorrowBookSearchForm;
 import com.internship.demo.model.BorrowBookDto;
 import com.internship.demo.model.mapper.BorrowOrderModelMapper;
 import com.internship.demo.mybaties.activemodel.Repository;
@@ -57,9 +58,19 @@ public class BorrowOrderRepository extends Repository<BorrowOrderModelMapper> {
     });
   }
 
-  public List<BorrowOrder> getListBorrowBookPagination(Long recordStart, Long pageSize) {
+  public List<BorrowOrder> getListBorrowBookPagination(BorrowBookSearchForm borrowBookSearchForm,
+      Long recordStart, Long pageSize) {
     return execute(mapper -> {
-      return mapper.getListBorrowBookPagination(recordStart, pageSize);
+      return mapper.getListBorrowBookPagination(borrowBookSearchForm.getTitle(),
+          borrowBookSearchForm.getUsername(), borrowBookSearchForm.getStatus(), recordStart,
+          pageSize);
+    });
+  }
+
+  public Long countListBorrowBookPagination(BorrowBookSearchForm borrowBookSearchForm) {
+    return execute(mapper -> {
+      return mapper.countListBorrowBookPagination(borrowBookSearchForm.getTitle(),
+          borrowBookSearchForm.getUsername(), borrowBookSearchForm.getStatus());
     });
   }
 

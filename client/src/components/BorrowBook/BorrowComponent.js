@@ -8,7 +8,7 @@ export default function BorrowComponent(props) {
     return (
         <div className="container">
             <div className="row">
-                <div className="col-md-10" >
+                <div className="col-md-12" >
                     <BorrowTable sessionUser={props.sessionUser} />
                 </div>
             </div>

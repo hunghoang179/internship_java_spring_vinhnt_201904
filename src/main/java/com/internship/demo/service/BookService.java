@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.internship.demo.dao.BookDao;
 import com.internship.demo.domain.Book;
+import com.internship.demo.form.BookSearchForm;
 import com.internship.demo.model.mapper.repository.BookRepository;
 
 @Service
@@ -39,8 +40,9 @@ public class BookService implements BookDao {
   }
 
   @Override
-  public List<Book> getListBookPagination(Long recordStart, Long pageSize) {
-    return bookRepository.getListBookPagination(recordStart, pageSize);
+  public List<Book> getListBookPagination(BookSearchForm bookSearchForm, Long recordStart,
+      Long pageSize) {
+    return bookRepository.getListBookPagination(bookSearchForm, recordStart, pageSize);
   }
 
   @Override
@@ -56,6 +58,11 @@ public class BookService implements BookDao {
   @Override
   public List<Book> getListBookSeach(String title, String author, String year) {
     return bookRepository.getListBookSeach(title, author, year);
+  }
+
+  @Override
+  public Long countTotalRecordBookSearch(BookSearchForm bookSearchForm) {
+    return bookRepository.countTotalRecordBookSearch(bookSearchForm);
   }
 
 }
