@@ -36,19 +36,17 @@ export default function Menu(props) {
         return listLink;
     }
 
-    // function logout() {
-    //     fetch('/api/logout')
-    //         .then(
-    //             function (response) {
-    //                 if (response.status === 200) {
-    //                     return;
-    //                 }
-    //             }
-    //         )
-    //         .catch(err =>
-    //             console.log('Error :-S', err)
-    //         );
-    // }
+    function logout() {
+        fetch('/api/logout')
+            .then(
+                function (response) {
+                    return;
+                }
+            )
+            .catch(err =>
+                console.log('Error :-S', err)
+            );
+    }
 
 
     return (
@@ -70,7 +68,7 @@ export default function Menu(props) {
                                 <ul className="dropdown-menu">
                                     <Link to="/change/password"><li>Thay đổi mật khẩu</li></Link>
                                     <Link to="/change/infor"><li>Thay đổi thông tin</li></Link>
-                                    <li>Đăng xuất</li>
+                                    <Link to="/home"><li onClick={() => logout()}>Đăng xuất</li></Link>
                                 </ul>
                             </li>
                         </ul>

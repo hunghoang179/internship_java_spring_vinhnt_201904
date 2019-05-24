@@ -1,15 +1,33 @@
 import React, { useState, useEffect } from 'react'
-import { Link, Redirect } from 'react-router-dom'
-import Role from "../Share/Role";
+import { Link } from 'react-router-dom'
 
 
 export default function CategoryTable(props) {
 
     const [categories, setCategories] = useState([]);
     const [error, setError] = useState(null);
+    const [keySearch, setKeySearch] = useState("");
+    const [pageNumber, setPageNumber] = useState(1);
+    const [pages, setPages] = useState(0);
 
     useEffect(() => {
-        fetch('/api/categories')
+        if (keySearch !== "") {
+            getListCategoryPagination();
+            setPages(0)
+        } else {
+            getListAllCategory();
+        }
+    }, [pageNumber, keySearch])
+
+    useEffect(() => {
+        if (keySearch === "") {
+            getTotalPage();
+        }
+    }, [keySearch])
+
+
+    function getListAllCategory() {
+        fetch(`/api/categories/${pageNumber}`)
             .then(
                 function (response) {
                     if (response.status !== 200) {
@@ -23,7 +41,36 @@ export default function CategoryTable(props) {
             .catch(err =>
                 console.log('Error :-S', err)
             );
-    }, [])
+    }
+
+    function getListCategoryPagination() {
+        fetch(`/api/categories/pagination/${pageNumber}/${keySearch}`)
+            .then(
+                function (response) {
+                    if (response.status !== 200) {
+                        setCategories([])
+                    }
+                    return response.json();
+                }
+            )
+            .then(responseJson => setCategories(responseJson))
+            .catch(err =>
+                console.log('Error :-S', err)
+            );
+    }
+
+    function getTotalPage() {
+        fetch("/api/categories/pagination/totalPage")
+            .then(
+                function (response) {
+                    return response.json();
+                }
+            )
+            .then(responseJson => setPages(responseJson))
+            .catch(err =>
+                console.log('Error :-S', err)
+            );
+    }
 
     const onDelete = (id) => {
         if (id) {
@@ -50,19 +97,43 @@ export default function CategoryTable(props) {
         }
     }
 
+    function arrayPages(params) {
+        let arr = [];
+        for (let i = 1; i <= params; i++) {
+            arr.push(i);
+        }
+        return arr;
+    }
+
     return (
-        <div>
-            <p>{error !== null ? error : ""}</p>
-            <table className="table table-striped">
-                <thead>
-                    <tr>
-                        <th>STT</th>
-                        <th>Tên thể loại</th>
-                        <th>Thao tác</th>
-                    </tr>
-                </thead>
-                <ListItem categories={categories} sessionUser={props.sessionUser} onDelete={onDelete} />
-            </table>
+        <div className="row">
+            <div className="col-md-2">
+                <Link to='/category/add' className="btn btn-primary">Thêm mới thể loại sách</Link>
+            </div>
+            <div className="col-md-5"></div>
+            <div className="col-md-5">
+                <input className="form-control" value={keySearch} onChange={e => setKeySearch(e.target.value)} type="text" placeholder="Search" aria-label="Search" />
+            </div>
+            <div className="col-md-12">
+                <p>{error !== null ? error : ""}</p>
+                <table className="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>STT</th>
+                            <th>Tên thể loại</th>
+                            <th>Thao tác</th>
+                        </tr>
+                    </thead>
+                    <ListItem categories={categories} sessionUser={props.sessionUser} onDelete={onDelete} />
+                </table>
+            </div>
+            <nav aria-label="Page navigation example">
+                <ul className="pagination">
+                    {pages > 1 ? arrayPages(pages).map(page =>
+                        <li className="page-item" className={page === pageNumber ? 'active' : ''} key={page}><a className="page-link" onClick={() => { setPageNumber(page) }}>{page}</a></li>
+                    ) : ""}
+                </ul>
+            </nav>
         </div>
     );
 }

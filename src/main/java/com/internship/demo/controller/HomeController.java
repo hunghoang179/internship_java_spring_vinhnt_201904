@@ -61,7 +61,7 @@ public class HomeController {
     }
     model.addAttribute("user", users);
     List<Book> listBook = bookDao.getListBook();
-    List<Category> listCategory = categoryDao.getListCategory();
+    List<Category> listCategory = categoryDao.getListCategory(1l,1000l);
     model.addAttribute("listBook", listBook);
     model.addAttribute("listCategory", listCategory);
     //return "home";

@@ -14,11 +14,24 @@ public class CategoryRepository extends Repository<CategoryModelMapper> {
     return session.getMapper(CategoryModelMapper.class);
   }
 
-  public List<Category> getListCategory() {
+  public List<Category> getListCategory(Long recordStart, Long pageSize) {
     return execute(mapper -> {
-      return mapper.getListCategory();
+      return mapper.getListCategory(recordStart,pageSize);
     });
   }
+
+  public List<Category> getListCategoryPagination(String name, Long recordStart, Long pageSize) {
+    return execute(mapper -> {
+      return mapper.getListCategoryPagination(name, recordStart, pageSize);
+    });
+  }
+  
+  public Long countTotalCategory() {
+    return execute(mapper -> {
+      return mapper.countTotalCategory();
+    });
+  }
+
 
   public void insertCategory(Category category) {
     execute(mapper -> {

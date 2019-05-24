@@ -87,8 +87,8 @@
 		<if test='username != ""'>
 			AND u.user_name LIKE #{username}
 		</if>
-		<if test='status != ""'>
-			AND bo.status LIKE #{status}
+		<if test='status != "" and status != "-1"'>
+			AND bo.status = #{status}
 		</if>
 		LIMIT
 		#{recordStart},#{pageSize}
@@ -113,8 +113,8 @@
 		<if test='username != ""'>
 			AND u.user_name LIKE #{username}
 		</if>
-		<if test='status != ""'>
-			AND bo.status LIKE #{status}
+		<if test='status != "" and status != "-1"'>
+			AND bo.status = #{status}
 		</if>
 	</select>
 

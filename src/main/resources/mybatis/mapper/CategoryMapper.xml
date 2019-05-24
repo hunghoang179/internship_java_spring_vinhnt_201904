@@ -18,6 +18,29 @@
 		*
 		FROM categories c
 		WHERE c.is_deleted = 0
+		LIMIT
+		#{recordStart},#{pageSize}
+	</select>
+
+	<select id="getListCategoryPagination"
+		resultMap="CategoryResultMap">
+		SELECT
+		*
+		FROM categories c
+		WHERE c.is_deleted = 0
+		<if test='name != ""'>
+			AND c.name LIKE #{name}
+		</if>
+		LIMIT
+		#{recordStart},#{pageSize}
+	</select>
+
+	<select id="countTotalCategory" resultType="Long">
+		SELECT
+		COUNT(*)
+		FROM
+		categories c
+		WHERE c.is_deleted = 0
 	</select>
 
 	<select id="findCategoryById" resultMap="CategoryResultMap">
@@ -26,12 +49,13 @@
 		FROM categories c
 		WHERE c.id = #{id}
 	</select>
-	
+
 	<select id="checkCategoryValid" resultType="Long">
 		SELECT
-		 COUNT(*)
-		FROM categories c
-		WHERE #{id} 
+		COUNT(*)
+		FROM
+		categories c
+		WHERE #{id}
 		IN (SELECT b.id_category FROM books b)
 	</select>
 
@@ -44,10 +68,11 @@
 
 	<update id='updateCategory' parameterType='Category'>
 		UPDATE categories c
-		SET c.name = #{name}, c.update_user = #{updateUser}, c.update_time = #{updateTime}
+		SET c.name = #{name}, c.update_user = #{updateUser}, c.update_time =
+		#{updateTime}
 		WHERE c.id = #{id};
 	</update>
-	
+
 	<update id="deleteCategory" parameterType="Long">
 		UPDATE categories c
 		SET c.is_deleted = 1

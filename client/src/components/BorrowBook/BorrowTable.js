@@ -12,7 +12,7 @@ export default function BorrowTable(props) {
 
     const [title, setTitle] = useState("");
     const [username, setUsername] = useState("");
-    const [status, setStatus] = useState("");
+    const [status, setStatus] = useState(-1);
 
     useEffect(() => {
         getListPagination(title, username, status);
@@ -102,7 +102,7 @@ export default function BorrowTable(props) {
             </table>
             <nav aria-label="Page navigation example">
                 <ul className="pagination">
-                    {pages !== 0 ? arrayPages().map(page =>
+                    {pages > 1 ? arrayPages().map(page =>
                         <li className="page-item" className={page === pageNumber ? 'active' : ''} key={page}><a className="page-link" onClick={() => { setPageNumber(page) }}>{page}</a></li>
                     ) : ""}
                 </ul>

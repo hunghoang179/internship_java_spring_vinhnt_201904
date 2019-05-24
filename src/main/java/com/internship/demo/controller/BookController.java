@@ -51,7 +51,7 @@ public class BookController {
   @GetMapping(path = "/admin/cap-nhat-sach/{id}")
   public String redirectUpdateBookPage(@PathVariable long id, Model model) {
     Book book = bookDao.findBookById(id);
-    List<Category> listCategory = categoryDao.getListCategory();
+    List<Category> listCategory = categoryDao.getListCategory(1l,1000l);
     model.addAttribute("book", book);
     model.addAttribute("listCategory", listCategory);
     return "/book/update-book";
@@ -87,7 +87,7 @@ public class BookController {
 
   @GetMapping(path = "/the-loai-sach")
   public String redirectCategoryPage(Model model) {
-    model.addAttribute("listCategory", categoryDao.getListCategory());
+    model.addAttribute("listCategory", categoryDao.getListCategory(1l,1000l));
     model.addAttribute("category", new Category());
     return "/category/category-list";
   }
@@ -139,7 +139,7 @@ public class BookController {
         categoryDao.deleteCategory(id);
       } else {
         model.addAttribute("error", MessageUltils.ERROR_DELETE_CATEGORY);
-        model.addAttribute("listCategory", categoryDao.getListCategory());
+        model.addAttribute("listCategory", categoryDao.getListCategory(1l,1000l));
         return "/category/category-list";
       }
     } catch (Exception e) {
@@ -154,7 +154,7 @@ public class BookController {
       HttpServletRequest request) {
 
     List<Book> listBook = bookDao.getListBook();
-    List<Category> listCategory = categoryDao.getListCategory();
+    List<Category> listCategory = categoryDao.getListCategory(1l,1000l);
 
     if (bindingResult.hasErrors()) {
       model.addAttribute("error", MessageUltils.DATE_ERROR);

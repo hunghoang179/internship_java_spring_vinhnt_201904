@@ -5,7 +5,11 @@ import com.internship.demo.domain.Category;
 
 public interface CategoryModelMapper {
 
-  List<Category> getListCategory();
+  List<Category> getListCategory(Long recordStart, Long pageSize);
+  
+  List<Category> getListCategoryPagination(String name, Long recordStart,Long pageSize);
+  
+  Long countTotalCategory();
 
   void insertCategory(Category category);
 

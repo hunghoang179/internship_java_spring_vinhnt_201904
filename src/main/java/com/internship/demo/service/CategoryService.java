@@ -14,8 +14,8 @@ public class CategoryService implements CategoryDao {
   CategoryRepository categoryRepository;
 
   @Override
-  public List<Category> getListCategory() {
-    return categoryRepository.getListCategory();
+  public List<Category> getListCategory(Long recordStart, Long pageSize) {
+    return categoryRepository.getListCategory(recordStart, pageSize);
   }
 
   @Override
@@ -47,6 +47,16 @@ public class CategoryService implements CategoryDao {
       return isCheck;
     }
     return isCheck;
+  }
+
+  @Override
+  public List<Category> getListCategoryPagination(String name, Long recordStart, Long pageSize) {
+    return categoryRepository.getListCategoryPagination(name, recordStart, pageSize);
+  }
+
+  @Override
+  public Long countTotalCategory() {
+    return categoryRepository.countTotalCategory();
   }
 
 }
